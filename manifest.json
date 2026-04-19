@@ -1,13 +1,17 @@
 {
-  "name": "SBAS v5.10",
+  "name": "SBAS v5.11",
   "short_name": "SBAS",
-  "description": "Personal Strategic Awareness System",
+  "description": "Personal Strategic Awareness System v5.11",
   "start_url": "/sbas-pwa/",
   "scope": "/sbas-pwa/",
   "display": "standalone",
   "background_color": "#0a0f1a",
   "theme_color": "#0a0f1a",
   "icons": [
-    { "src": "https://via.placeholder.com/192/0a0f1a/ffffff?text=S", "sizes": "192x192", "type": "image/png" }
+    {
+      "src": "https://via.placeholder.com/192/0a0f1a/ffffff?text=S",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
   ]
 }
