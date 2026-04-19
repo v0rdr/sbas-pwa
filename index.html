@@ -9,6 +9,7 @@
     <title>SBAS v6.0 • Strategic Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
         body { font-family: 'Inter', system_ui, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -224,18 +225,33 @@
         </div>
     </div>
 
-    <!-- Paste Grok Response -->
-    <div class="max-w-7xl mx-auto px-6 pb-16">
-        <div class="glass rounded-3xl p-8 premium-shadow">
+    <!-- Grok Modal -->
+    <div id="grok-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100]">
+        <div class="glass rounded-3xl p-8 max-w-2xl w-full mx-4">
             <div class="font-semibold text-xl mb-4">Paste Grok's Response</div>
             <textarea id="grok-response" class="w-full h-64 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono" placeholder="Paste Grok's full response here..."></textarea>
-            <div class="flex justify-end mt-4">
-                <button onclick="parseGrokResponse()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Parse &amp; Update Dashboard</button>
+            <div class="flex justify-end gap-x-3 mt-4">
+                <button onclick="closeGrokModal()" class="px-6 py-2.5 text-sm font-medium">Cancel</button>
+                <button onclick="parseGrokResponse()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Parse &amp; Update</button>
             </div>
         </div>
     </div>
 
     <script>
+        function initTailwind() {}
+        
+        let chartInstance = null;
+        
+        function createConfidenceChart() {
+            const ctx = document.getElementById('confidenceChart');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: ['China', 'US/Allied'], datasets: [{ data: [64, 57], backgroundColor: ['#ef4444', '#3b82f6'], borderColor: ['#f87171', '#60a5fa'], borderWidth: 2, borderRadius: 10, barThickness: 52 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: '#334155', lineWidth: 0.5 }, ticks: { color: '#64748b', font: { size: 12 } } }, x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 15, weight: '600' } } } } }
+            });
+        }
+        
         function adjustScore(side, delta) {
             if (side === 'china') {
                 let val = parseInt(document.getElementById('china-score').innerText);
@@ -327,7 +343,29 @@ Return your response using clear section headers matching the structure above. B
 SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Decision Utility Optimized`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
-            window.open(grokUrl, '_blank');
+            
+            // Safe opening method for PWA
+            const link = document.createElement('a');
+            link.href = grokUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show modal when user returns
+            const showModalOnReturn = () => {
+                document.removeEventListener('visibilitychange', showModalOnReturn);
+                document.getElementById('grok-modal').classList.remove('hidden');
+                document.getElementById('grok-modal').classList.add('flex');
+            };
+
+            document.addEventListener('visibilitychange', showModalOnReturn, { once: true });
+        }
+        
+        function closeGrokModal() {
+            document.getElementById('grok-modal').classList.remove('flex');
+            document.getElementById('grok-modal').classList.add('hidden');
         }
         
         function parseGrokResponse() {
@@ -357,6 +395,8 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
             const now = new Date();
             document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             
+            closeGrokModal();
+            
             const toast = document.createElement('div');
             toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
             toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Dashboard updated with Grok's assessment</span>`;
@@ -365,7 +405,9 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
         }
         
         function init() {
-            // Load saved scores
+            initTailwind();
+            createConfidenceChart();
+            
             const savedChina = localStorage.getItem('sbas_china_score');
             const savedUs = localStorage.getItem('sbas_us_score');
             if (savedChina) {
@@ -380,7 +422,7 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
             document.getElementById('dashboard-core').classList.remove('hidden');
             document.querySelector('[data-tab="core"]').classList.add('active');
             
-            console.log('%c[SBAS v6.0] Clean stable version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v6.0] Final version with modal + safe opening.', 'color:#64748b');
         }
         
         window.onload = init;
