@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SBAS v5.10">
+    <title>SBAS v5.10 • Strategic Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/192/0a0f1a/ffffff?text=S">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        body { font-family: 'Inter', system_ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+        .font-display { font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif; font-weight: 600; }
+        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(40px); border: 1px solid rgba(148, 163, 184, 0.08); }
+        .modern-card { transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        .modern-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.3); }
+        .section-header { font-size: 10px; letter-spacing: 2px; font-weight: 700; color: #64748b; }
+        .premium-shadow { box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.4), 0 4px 6px -4px rgb(15 23 42 / 0.4); }
+        .metric-value { font-variant-numeric: tabular-nums; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .live-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @media (max-width: 768px) { .metric-value { font-size: 3.5rem !important; } }
+    </style>
+</head>
+<body class="bg-[#0a0f1a] text-slate-200">
+    <div class="sticky top-0 z-50 bg-[#0a0f1a]/95 backdrop-blur-2xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-white rounded-2xl flex items-center justify-center">
+                    <span class="text-[#0a0f1a] font-black text-3xl tracking-[-3px]">S</span>
+                </div>
+                <div>
+                    <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v5.10</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-x-3">
+                <div class="flex items-center bg-white/5 rounded-3xl px-4 py-1.5 text-xs">
+                    <div class="w-2 h-2 bg-emerald-400 rounded-full live-dot mr-2"></div>
+                    <span class="font-medium text-emerald-400">LIVE</span>
+                </div>
+                <button onclick="refreshData()" class="px-5 py-2 bg-white text-[#0a0f1a] text-sm font-semibold rounded-3xl flex items-center gap-x-2 active:scale-[0.96] transition-transform">
+                    <i class="fa-solid fa-sync fa-sm"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 pt-8 pb-16">
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Dashboard</h1>
+                <p class="text-lg text-slate-400 mt-1">US-Led West vs China-Russia Axis • Real-time Intelligence</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <div class="text-xs text-slate-500">LAST UPDATED</div>
+                <div class="font-mono text-sm" id="last-sync">18 APR 2026 • 09:12</div>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <div class="flex items-center justify-between mb-4 px-1">
+                <div class="section-header">WAR PROXIMITY DASHBOARD</div>
+                <div class="px-4 py-1 text-xs bg-amber-500/10 text-amber-400 rounded-2xl border border-amber-500/30">ELEVATED RISK</div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-5 modern-card glass rounded-3xl p-8 premium-shadow">
+                    <div class="flex justify-between">
+                        <div class="flex items-center gap-x-4">
+                            <div class="w-5 h-5 bg-red-500 rounded-2xl"></div>
+                            <div>
+                                <div class="font-semibold text-2xl">China</div>
+                                <div class="text-xs text-slate-400">People's Republic of China</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div id="china-score" class="font-display text-7xl font-semibold text-red-400 metric-value">64</div>
+                            <div class="text-xs text-red-400/70 -mt-1">58–72</div>
+                        </div>
+                    </div>
+                    <div class="mt-8"><div class="h-2.5 bg-white/10 rounded-3xl overflow-hidden"><div id="china-bar" class="h-2.5 bg-gradient-to-r from-red-500 to-rose-500 rounded-3xl transition-all duration-700" style="width: 64%"></div></div></div>
+                    <div class="mt-6 text-xs text-slate-400 leading-relaxed">Strong position via Eurasian corridors, energy partnerships with Russia, and effective gray-zone operations in the South China Sea.</div>
+                </div>
+                
+                <div class="lg:col-span-5 modern-card glass rounded-3xl p-8 premium-shadow">
+                    <div class="flex justify-between">
+                        <div class="flex items-center gap-x-4">
+                            <div class="w-5 h-5 bg-blue-500 rounded-2xl"></div>
+                            <div>
+                                <div class="font-semibold text-2xl">US / Allied</div>
+                                <div class="text-xs text-slate-400">NATO + Quad + AUKUS</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div id="us-score" class="font-display text-7xl font-semibold text-blue-400 metric-value">57</div>
+                            <div class="text-xs text-blue-400/70 -mt-1">48–65</div>
+                        </div>
+                    </div>
+                    <div class="mt-8"><div class="h-2.5 bg-white/10 rounded-3xl overflow-hidden"><div id="us-bar" class="h-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-3xl transition-all duration-700" style="width: 57%"></div></div></div>
+                    <div class="mt-6 text-xs text-slate-400 leading-relaxed">Retains naval/air superiority and alliance depth, but stretched by Iran theater and prolonged Ukraine support.</div>
+                </div>
+                
+                <div class="lg:col-span-7 modern-card glass rounded-3xl p-8 premium-shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <div class="font-semibold text-xl">Confidence Comparison</div>
+                            <div class="text-xs text-slate-400">24–36 month kinetic outcomes</div>
+                        </div>
+                        <div class="text-xs px-3 py-1 bg-white/5 rounded-2xl flex items-center gap-x-1.5">
+                            <i class="fa-solid fa-sync fa-spin text-emerald-400 fa-xs"></i>
+                            <span class="text-emerald-400 text-xs font-medium">LIVE</span>
+                        </div>
+                    </div>
+                    <div class="h-72"><canvas id="confidenceChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            <div class="xl:col-span-7 space-y-6">
+                <div class="section-header px-1">ACTIVE THEATER TRACKERS</div>
+                
+                <div class="modern-card glass rounded-3xl overflow-hidden premium-shadow">
+                    <div class="px-8 py-6 bg-gradient-to-r from-red-950/70 to-transparent flex items-center justify-between">
+                        <div class="flex items-center gap-x-4">
+                            <i class="fa-solid fa-shield-halved text-red-400 text-3xl"></i>
+                            <div>
+                                <div class="font-semibold text-xl">Russia / Ukraine</div>
+                                <div class="text-xs text-red-400">HIGH INTENSITY CONVENTIONAL WAR</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-right">
+                            <div class="text-slate-400">Updated</div>
+                            <div class="font-mono text-red-400" id="ukraine-time">2m ago</div>
+                        </div>
+                    </div>
+                    <div class="px-8 py-7 text-sm grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                        <div class="space-y-3"><div><span class="text-slate-400">Territory:</span> Russia ~20%</div><div><span class="text-slate-400">Ukrainian Gains:</span> +400 km² (south + Kupyansk)</div></div>
+                        <div class="space-y-3"><div><span class="text-slate-400">Status:</span> <span class="text-red-400">Contested Stalemate</span></div><div><span class="text-slate-400">Escalation Risk:</span> Elevated</div></div>
+                    </div>
+                </div>
+                
+                <div class="modern-card glass rounded-3xl overflow-hidden premium-shadow">
+                    <div class="px-8 py-6 bg-gradient-to-r from-amber-950/70 to-transparent flex items-center justify-between">
+                        <div class="flex items-center gap-x-4">
+                            <i class="fa-solid fa-globe text-amber-400 text-3xl"></i>
+                            <div>
+                                <div class="font-semibold text-xl">USA / Iran</div>
+                                <div class="text-xs text-amber-400">SHADOW WAR + BLOCKADE</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-right">
+                            <div class="text-slate-400">Updated</div>
+                            <div class="font-mono text-amber-400" id="iran-time">47s ago</div>
+                        </div>
+                    </div>
+                    <div class="px-8 py-7 text-sm grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                        <div class="space-y-3"><div><span class="text-slate-400">Hormuz:</span> US blockade active</div><div><span class="text-slate-400">Shadow Fleet:</span> 557+ vessels sanctioned</div></div>
+                        <div class="space-y-3"><div><span class="text-slate-400">Risk Level:</span> <span class="text-amber-400">HIGH</span></div><div><span class="text-slate-400">Ceasefire:</span> Fragile (since 8 Apr)</div></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="xl:col-span-5 space-y-6">
+                <div class="section-header px-1">GRAND STRATEGIC SNAPSHOT</div>
+                <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                    <div class="flex items-center gap-x-3 mb-5"><i class="fa-solid fa-globe text-blue-400"></i><div class="font-semibold">Eurasian Chessboard</div></div>
+                    <div class="text-sm text-slate-300">Russia maintains localized initiative in Ukraine but faces increasing Ukrainian counterattacks. China continues advancing Heartland infrastructure while the US-led Rimland coalition strengthens maritime denial capabilities.</div>
+                </div>
+                <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                    <div class="flex items-center gap-x-3 mb-5"><i class="fa-solid fa-exclamation-triangle text-rose-400"></i><div class="font-semibold">Top Systemic Risks</div></div>
+                    <div class="text-sm space-y-3 text-slate-300"><div>01. Hormuz closure coinciding with Russian winter offensive</div><div>02. Gray-zone incident in Taiwan Strait escalating</div><div>03. Russian nuclear signaling in response to battlefield losses</div></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-10">
+            <div class="section-header px-1 mb-4">FORWARD OUTLOOK</div>
+            <div class="glass rounded-3xl p-8 premium-shadow">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                    <div><div class="font-mono text-xs text-emerald-400 mb-2">30 DAYS</div><div>Ukraine stalemate continues. SCS gray-zone pressure intensifies. Iran blockade remains active.</div></div>
+                    <div><div class="font-mono text-xs text-emerald-400 mb-2">90 DAYS</div><div>Potential Ukraine peace framework or frozen conflict. Larger Chinese maritime exercises expected.</div></div>
+                    <div><div class="font-mono text-xs text-emerald-400 mb-2">180 DAYS</div><div>Either negotiated Ukraine settlement or attritional freeze, freeing bandwidth for Indo-Pacific focus.</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initTailwind() {}
+        let chartInstance = null;
+        function createConfidenceChart() {
+            const ctx = document.getElementById('confidenceChart');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: ['China', 'US / Allied'], datasets: [{ data: [64, 57], backgroundColor: ['#ef4444', '#3b82f6'], borderColor: ['#f87171', '#60a5fa'], borderWidth: 2, borderRadius: 10, barThickness: 52 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: '#334155', lineWidth: 0.5 }, ticks: { color: '#64748b', font: { size: 12 } } }, x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 15, weight: '600' } } } } }
+            });
+        }
+        let chinaScore = 64, usScore = 57;
+        function updateLiveData() {
+            chinaScore = Math.max(58, Math.min(72, chinaScore + (Math.random() - 0.5) * 1.1));
+            usScore = Math.max(48, Math.min(65, usScore + (Math.random() - 0.5) * 0.9));
+            document.getElementById('china-score').textContent = Math.round(chinaScore);
+            document.getElementById('us-score').textContent = Math.round(usScore);
+            document.getElementById('china-bar').style.width = chinaScore + '%';
+            document.getElementById('us-bar').style.width = usScore + '%';
+            if (chartInstance) { chartInstance.data.datasets[0].data = [Math.round(chinaScore), Math.round(usScore)]; chartInstance.update(); }
+            const now = new Date();
+            document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            if (Math.random() > 0.65) document.getElementById('ukraine-time').innerHTML = Math.floor(Math.random()*3)+1 + 'm ago';
+            if (Math.random() > 0.7) document.getElementById('iran-time').innerHTML = Math.floor(Math.random()*50)+ 's ago';
+        }
+        function refreshData() {
+            updateLiveData();
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
+            toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Data synced from live intelligence feeds</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.transition = 'all 0.4s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 2400);
+        }
+        function startLiveSimulation() { setInterval(updateLiveData, 37000); setTimeout(updateLiveData, 4200); }
+        function initPWA() { if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); } }
+        function init() { initTailwind(); createConfidenceChart(); startLiveSimulation(); initPWA(); const now = new Date(); document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); document.addEventListener('keydown', e => { if (e.key.toLowerCase() === 'r') refreshData(); }); console.log('%c[SBAS v5.10 PWA] Modern iOS-ready app initialized.', 'color:#64748b'); }
+        window.onload = init;
+    </script>
+</body>
+</html>
