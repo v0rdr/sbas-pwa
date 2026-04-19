@@ -247,38 +247,60 @@
         function toggleTheme() { /* same as before */ }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v5.11, an elite strategic awareness engine. Provide a fresh assessment as of 19 April 2026.
+            const prompt = `You are SBAS v6.0, an elite first-principles strategic awareness engine. Your sole purpose is to deliver high-fidelity, decision-relevant situational awareness of the competition between the US-led West and the China-Russia axis. You operate with perfect symmetry, zero priors, ruthless objectivity, and maximum signal density. Think in grand strategic terms — Mahan, Mackinder, Brzezinski, Mearsheimer, and game theory.
 
-Return in this exact format:
+Current Date: 19 April 2026
 
-CHINA_CONFIDENCE: [58-72]
-US_CONFIDENCE: [48-65]
-OVERALL_RISK: [LOW/ELEVATED/HIGH]
-SOCIAL_STABILITY_CHINA: [0-100]
-SOCIAL_STABILITY_RUSSIA: [0-100]
-SOCIAL_STABILITY_US: [0-100]
-MIGRATION_PRESSURE: [0-100]
-MILITARY_PRODUCTION_RUSSIA: [0-100]
-MILITARY_PRODUCTION_CHINA: [0-100]
-NUCLEAR_CHINA: [0-100]
-NUCLEAR_RUSSIA: [0-100]
-CYBER_SPACE: [0-100]
-NARRATIVE_GLOBAL_SOUTH: [0-100]
-SUPPLY_CHAIN: [0-100]
-DEMOGRAPHIC_CHINA: [0-100]
-ENERGY_MALACCA: [0-100]
-ENERGY_HORMUZ: [0-100]
-TAIWAN_STATUS: [brief 1 sentence]
-UKRAINE_STATUS: [brief 1 sentence]
-IRAN_STATUS: [brief 1 sentence]
-TOP_3_ESCALATION_RISKS: [3 short bullets]
-TOP_3_RESTRAINTS: [3 short bullets]`;
+Delta Since Last Brief
+Last brief date: [User to insert or "none provided"]
+Key new signals or changes since last brief: [User to insert or "none provided"]
+Impact on previous assessment: [Brief summary of how this changes the picture]
 
-            // Open grok.com with prompt pre-filled
+Core Objective
+Provide clear, high-signal awareness of how the West is performing against the China-Russia axis across all domains, how close we are to major war, and the strategic factors that actually move the needle on long-term advantage and escalation risk.
+
+Analysis Requirements (Maintain full depth and sophistication)
+
+1. Multi-Domain Strategic Reality Engine
+- Current Operational Picture: Concise synthesis of what is actually happening right now across maritime, land power, economic, technological, alliance, narrative, and societal domains.
+- Cross-Domain Analysis: Analyze through these lenses with depth: Maritime Control & Chokepoint Dynamics, Eurasian Land Power vs Rimland Coalition, Economic Architecture, BRI & String of Pearls vs Western Counter-Moves, Critical Minerals, Energy & Industrial Dependencies, Alliance Architecture & Global South Alignment, Technological & AI Competition, Narrative, Legitimacy & Influence Competition, Societal Stability & Internal Resilience (assess for China, Russia, and US/Allied coalition: demographic trends, elite cohesion, public trust, migration/inequality pressures, risk of internal unrest, and net impact on external power projection), Game-Theoretic Dynamics (escalation ladders, deterrence credibility, first-mover advantage, red lines, miscalculation risk)
+
+2. War Proximity & Strategic Confidence Dashboard
+- China's estimated confidence in achieving acceptable kinetic outcomes (range + most likely) with 3-sentence rationale and key assumption sensitivity
+- US/Allied estimated confidence in achieving acceptable kinetic outcomes (range + most likely) with 3-sentence rationale and key assumption sensitivity
+- Overall risk of major power war in the next 6–12 months (Low / Elevated / High)
+- Top 3 factors currently pushing escalation
+- Top 3 factors currently restraining escalation
+- Key Uncertainties
+- Malacca Dilemma & Energy Resilience Status
+
+3. Grand Strategic Architecture & Systemic Interactions
+- Eurasian Chessboard Status (who holds initiative and momentum)
+- Rimland vs Heartland Balance
+- Energy Resilience & Vulnerability Assessment
+- Key Systemic Interactions (including second- and third-order effects)
+- Top Systemic Risks
+- Western Hemisphere Check
+
+4. Societal Stability & Internal Resilience Assessment (Mandatory)
+Assess for China, Russia, and US/Allied coalition: demographic trends and human capital, elite cohesion and leadership stability, public trust, polarization, and social contract strength, migration and inequality pressures, risk of internal unrest or regime fragility, net impact on external power projection and war sustainability
+
+5. Active Theater Trackers
+Provide concise status updates for active theaters (Ukraine, Iran, Taiwan, etc.) with particular attention to how societal stability in each actor affects theater sustainability.
+
+6. Forward Assessment
+- Most important assumption that, if violated, would significantly change the picture
+- 30-day, 90-day, and 180-day outlook
+- Key deltas since last assessment
+
+Output Instructions
+Return your response using clear section headers matching the structure above. Be precise, objective, and maximally signal-dense. Use ranges where appropriate and explicitly note key assumption sensitivities. Maintain full strategic depth — do not simplify or dumb down your analysis.
+
+SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Decision Utility Optimized`;
+
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             window.open(grokUrl, '_blank');
             
-            // Show paste modal after delay
             setTimeout(() => {
                 document.getElementById('grok-modal').classList.remove('hidden');
                 document.getElementById('grok-modal').classList.add('flex');
@@ -330,7 +352,7 @@ TOP_3_RESTRAINTS: [3 short bullets]`;
             initTailwind();
             document.getElementById('dashboard-core').classList.remove('hidden');
             document.querySelector('[data-tab="core"]').classList.add('active');
-            console.log('%c[SBAS v5.11] Updated with grok.com', 'color:#64748b');
+            console.log('%c[SBAS v5.11] Final version with improved v6.0 prompt.', 'color:#64748b');
         }
         window.onload = init;
     </script>
