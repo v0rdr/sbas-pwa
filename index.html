@@ -345,10 +345,13 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             window.open(grokUrl, '_blank');
             
-            setTimeout(() => {
+            const showModalOnReturn = () => {
+                document.removeEventListener('visibilitychange', showModalOnReturn);
                 document.getElementById('grok-modal').classList.remove('hidden');
                 document.getElementById('grok-modal').classList.add('flex');
-            }, 3000);
+            };
+
+            document.addEventListener('visibilitychange', showModalOnReturn, { once: true });
         }
         
         function closeGrokModal() {
@@ -396,7 +399,6 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
             initTailwind();
             createConfidenceChart();
             
-            // Load saved scores
             const savedChina = localStorage.getItem('sbas_china_score');
             const savedUs = localStorage.getItem('sbas_us_score');
             if (savedChina) {
@@ -408,11 +410,10 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
                 document.getElementById('us-bar').style.width = savedUs + '%';
             }
             
-            // Show core dashboard
             document.getElementById('dashboard-core').classList.remove('hidden');
             document.querySelector('[data-tab="core"]').classList.add('active');
             
-            console.log('%c[SBAS v6.0] Fully working version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v6.0] Final working version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
