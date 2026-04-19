@@ -1,7 +1,7 @@
 {
-  "name": "SBAS v5.11",
+  "name": "SBAS v6",
   "short_name": "SBAS",
-  "description": "Personal Strategic Awareness System v5.11",
+  "description": "Personal Strategic Awareness System v6",
   "start_url": "/sbas-pwa/",
   "scope": "/sbas-pwa/",
   "display": "standalone",
