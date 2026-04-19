@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v6">
-    <title>SBAS v6 • Strategic Dashboard</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v6.0">
+    <title>SBAS v6.0 • Strategic Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v5.11</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v6.0</span>
                 </div>
             </div>
             
@@ -239,12 +239,56 @@
 
     <script>
         function initTailwind() {}
+        
         let chartInstance = null;
         
-        function createConfidenceChart() { /* same as before */ }
-        function adjustScore(side, delta) { /* same as before */ }
-        function switchDashboard(dashboard) { /* same as before */ }
-        function toggleTheme() { /* same as before */ }
+        function createConfidenceChart() {
+            const ctx = document.getElementById('confidenceChart');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: ['China', 'US/Allied'], datasets: [{ data: [64, 57], backgroundColor: ['#ef4444', '#3b82f6'], borderColor: ['#f87171', '#60a5fa'], borderWidth: 2, borderRadius: 10, barThickness: 52 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: '#334155', lineWidth: 0.5 }, ticks: { color: '#64748b', font: { size: 12 } } }, x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 15, weight: '600' } } } } }
+            });
+        }
+        
+        function adjustScore(side, delta) {
+            if (side === 'china') {
+                let val = parseInt(document.getElementById('china-score').innerText);
+                val = Math.max(58, Math.min(72, val + delta));
+                document.getElementById('china-score').innerText = val;
+                document.getElementById('china-bar').style.width = val + '%';
+                localStorage.setItem('sbas_china_score', val);
+            } else {
+                let val = parseInt(document.getElementById('us-score').innerText);
+                val = Math.max(48, Math.min(65, val + delta));
+                document.getElementById('us-score').innerText = val;
+                document.getElementById('us-bar').style.width = val + '%';
+                localStorage.setItem('sbas_us_score', val);
+            }
+        }
+        
+        function switchDashboard(dashboard) {
+            document.querySelectorAll('.dashboard-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('dashboard-' + dashboard).classList.remove('hidden');
+            document.querySelectorAll('.dashboard-tab').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-tab="${dashboard}"]`).classList.add('active');
+        }
+        
+        function toggleTheme() {
+            const body = document.body;
+            if (body.classList.contains('bg-[#0a0f1a]')) {
+                body.classList.remove('bg-[#0a0f1a]', 'text-slate-200');
+                body.classList.add('bg-slate-100', 'text-slate-900');
+                document.getElementById('theme-icon').classList.remove('fa-moon');
+                document.getElementById('theme-icon').classList.add('fa-sun');
+            } else {
+                body.classList.remove('bg-slate-100', 'text-slate-900');
+                body.classList.add('bg-[#0a0f1a]', 'text-slate-200');
+                document.getElementById('theme-icon').classList.remove('fa-sun');
+                document.getElementById('theme-icon').classList.add('fa-moon');
+            }
+        }
         
         function refreshWithGrok() {
             const prompt = `You are SBAS v6.0, an elite first-principles strategic awareness engine. Your sole purpose is to deliver high-fidelity, decision-relevant situational awareness of the competition between the US-led West and the China-Russia axis. You operate with perfect symmetry, zero priors, ruthless objectivity, and maximum signal density. Think in grand strategic terms — Mahan, Mackinder, Brzezinski, Mearsheimer, and game theory.
@@ -350,10 +394,27 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
         
         function init() {
             initTailwind();
+            createConfidenceChart();
+            
+            // Load saved scores
+            const savedChina = localStorage.getItem('sbas_china_score');
+            const savedUs = localStorage.getItem('sbas_us_score');
+            if (savedChina) {
+                document.getElementById('china-score').innerText = savedChina;
+                document.getElementById('china-bar').style.width = savedChina + '%';
+            }
+            if (savedUs) {
+                document.getElementById('us-score').innerText = savedUs;
+                document.getElementById('us-bar').style.width = savedUs + '%';
+            }
+            
+            // Show core dashboard
             document.getElementById('dashboard-core').classList.remove('hidden');
             document.querySelector('[data-tab="core"]').classList.add('active');
-            console.log('%c[SBAS v6] Final version with improved v6.0 prompt.', 'color:#64748b');
+            
+            console.log('%c[SBAS v6.0] Fully working version loaded.', 'color:#64748b');
         }
+        
         window.onload = init;
     </script>
 </body>
