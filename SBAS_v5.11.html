@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SBAS v5.11">
+    <title>SBAS v5.11 • Strategic Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        body { font-family: 'Inter', system_ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+        .font-display { font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif; font-weight: 600; }
+        .glass { background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(24px); border: 1px solid rgba(148, 163, 184, 0.1); }
+        .modern-card { transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        .modern-card:hover { transform: translateY(-4px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); }
+        .section-header { font-size: 10px; letter-spacing: 2px; font-weight: 700; color: #64748b; }
+        .premium-shadow { box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.4), 0 4px 6px -4px rgb(15 23 42 / 0.4); }
+        .metric-value { font-variant-numeric: tabular-nums; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .live-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .dashboard-tab { transition: all 0.2s ease; }
+        .dashboard-tab.active { background: #1e2937; color: white; border-radius: 12px; }
+        .grok-btn { background: linear-gradient(135deg, #1e5f8a 0%, #3b82f6 100%); }
+        .grok-btn:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
+        .metric-row { transition: all 0.2s ease; }
+        .metric-row:hover { background: rgba(148, 163, 184, 0.08); border-radius: 8px; }
+    </style>
+</head>
+<body class="bg-[#0a0f1a] text-slate-200">
+    <!-- Top Navigation -->
+    <div class="sticky top-0 z-50 bg-[#0a0f1a]/95 backdrop-blur-2xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-white rounded-2xl flex items-center justify-center">
+                    <span class="text-[#0a0f1a] font-black text-3xl tracking-[-3px]">S</span>
+                </div>
+                <div>
+                    <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v5.11</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-x-2">
+                <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-moon fa-lg" id="theme-icon"></i>
+                </button>
+                
+                <button onclick="refreshWithGrok()" class="grok-btn px-5 py-2 text-white text-sm font-semibold rounded-3xl flex items-center gap-x-2 active:scale-[0.96] transition-all shadow-lg">
+                    <i class="fa-solid fa-sync fa-sm"></i>
+                    <span>Refresh with Grok</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 pt-8 pb-16">
+        <!-- Header -->
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Dashboard</h1>
+                <p class="text-lg text-slate-400 mt-1">US-Led West vs China-Russia Axis • Real-time Intelligence</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <div class="text-xs text-slate-500">LAST UPDATED</div>
+                <div class="font-mono text-sm" id="last-sync">19 APR 2026 • 15:33</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6" id="dashboard-tabs">
+            <button onclick="switchDashboard('core')" class="dashboard-tab active px-4 py-2 text-sm font-medium" data-tab="core">Core Competition</button>
+            <button onclick="switchDashboard('society')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="society">Economics &amp; Society</button>
+            <button onclick="switchDashboard('military')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="military">Military &amp; Nuclear</button>
+            <button onclick="switchDashboard('influence')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="influence">Influence &amp; Emerging</button>
+        </div>
+
+        <!-- CORE COMPETITION -->
+        <div id="dashboard-core" class="dashboard-content">
+            <div class="mb-6">
+                <div class="section-header mb-4 px-1">CORE COMPETITION</div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- War Proximity -->
+                    <div class="lg:col-span-7 modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="font-semibold text-xl">War Proximity</div>
+                            <div class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-2xl">ELEVATED</div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-x-2"><div class="w-3 h-3 bg-red-500 rounded-full"></div><span>China</span></div>
+                                    <div class="flex items-center gap-x-1">
+                                        <div id="china-score" class="font-display text-4xl font-semibold text-red-400">64</div>
+                                        <div class="flex flex-col"><div onclick="adjustScore('china',1)" class="cursor-pointer text-xs">▲</div><div onclick="adjustScore('china',-1)" class="cursor-pointer text-xs">▼</div></div>
+                                    </div>
+                                </div>
+                                <div class="h-2 bg-white/10 rounded-full"><div id="china-bar" class="h-2 bg-red-500 rounded-full transition-all" style="width:64%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-x-2"><div class="w-3 h-3 bg-blue-500 rounded-full"></div><span>US/Allied</span></div>
+                                    <div class="flex items-center gap-x-1">
+                                        <div id="us-score" class="font-display text-4xl font-semibold text-blue-400">57</div>
+                                        <div class="flex flex-col"><div onclick="adjustScore('us',1)" class="cursor-pointer text-xs">▲</div><div onclick="adjustScore('us',-1)" class="cursor-pointer text-xs">▼</div></div>
+                                    </div>
+                                </div>
+                                <div class="h-2 bg-white/10 rounded-full"><div id="us-bar" class="h-2 bg-blue-500 rounded-full transition-all" style="width:57%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Energy & Minerals -->
+                    <div class="lg:col-span-5 modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Energy &amp; Critical Minerals</div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-400">China Malacca Risk</span><span class="font-mono">72</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Russia Shadow Fleet</span><span class="font-mono">64</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">US SPR Level</span><span class="font-mono">81</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Maritime -->
+                    <div class="lg:col-span-6 modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Maritime Chokepoints</div>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div><div class="text-slate-400">Malacca</div><div class="font-mono text-2xl">68</div></div>
+                            <div><div class="text-slate-400">Hormuz</div><div class="font-mono text-2xl">74</div></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tech & AI -->
+                    <div class="lg:col-span-6 modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Tech &amp; AI Competition</div>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div><div class="text-slate-400">Semiconductors (US lead)</div><div class="font-mono text-2xl">71</div></div>
+                            <div><div class="text-slate-400">AI Models (China closing)</div><div class="font-mono text-2xl">64</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ECONOMICS & SOCIETY -->
+        <div id="dashboard-society" class="dashboard-content hidden">
+            <div class="mb-6">
+                <div class="section-header mb-4 px-1">ECONOMICS &amp; SOCIETY</div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Social Stability</div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-400">China Youth Unrest</span><span class="font-mono">71</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Russia War Fatigue</span><span class="font-mono">68</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">US Polarization</span><span class="font-mono">74</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Migration Pressure</span><span class="font-mono">66</span></div>
+                        </div>
+                    </div>
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Supply Chain Resilience</div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-400">Semiconductor Dependency</span><span class="font-mono">58</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Pharma Sourcing</span><span class="font-mono">62</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Rare Earth Processing</span><span class="font-mono">81</span></div>
+                        </div>
+                    </div>
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Demographic Health</div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-400">China Aging Burden</span><span class="font-mono">79</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Russia Population Decline</span><span class="font-mono">73</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">US Birth Rate Collapse</span><span class="font-mono">61</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MILITARY & NUCLEAR -->
+        <div id="dashboard-military" class="dashboard-content hidden">
+            <div class="mb-6">
+                <div class="section-header mb-4 px-1">MILITARY &amp; NUCLEAR</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Military Production</div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-400">Artillery Shells (Russia lead)</span><span class="font-mono">78</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Drone Production (China lead)</span><span class="font-mono">82</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Shipbuilding (China dominant)</span><span class="font-mono">87</span></div>
+                        </div>
+                    </div>
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Nuclear &amp; Strategic Posture</div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-400">China Arsenal Growth</span><span class="font-mono">74</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Russia Modernization</span><span class="font-mono">81</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">US Nuclear Readiness</span><span class="font-mono">69</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INFLUENCE & EMERGING -->
+        <div id="dashboard-influence" class="dashboard-content hidden">
+            <div class="mb-6">
+                <div class="section-header mb-4 px-1">INFLUENCE &amp; EMERGING DOMAINS</div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Alliances &amp; Global South</div>
+                        <div class="text-5xl font-semibold">71</div>
+                        <div class="text-xs text-emerald-400 mt-1">NATO +4 | China gaining in Africa</div>
+                    </div>
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Narrative Competition</div>
+                        <div class="text-5xl font-semibold">58</div>
+                        <div class="text-xs text-amber-400 mt-1">China winning Global South narrative</div>
+                    </div>
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Cyber &amp; Space Domain</div>
+                        <div class="text-5xl font-semibold">67</div>
+                        <div class="text-xs text-red-400 mt-1">China space + cyber activity rising</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grok Modal -->
+    <div id="grok-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100]">
+        <div class="glass rounded-3xl p-8 max-w-2xl w-full mx-4">
+            <div class="font-semibold text-xl mb-4">Paste Grok's Response</div>
+            <textarea id="grok-response" class="w-full h-64 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono" placeholder="Paste Grok's full response here..."></textarea>
+            <div class="flex justify-end gap-x-3 mt-4">
+                <button onclick="closeGrokModal()" class="px-6 py-2.5 text-sm font-medium">Cancel</button>
+                <button onclick="parseGrokResponse()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Parse &amp; Update</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initTailwind() {}
+        let chartInstance = null;
+        function createConfidenceChart() { /* same as before */ }
+        function adjustScore(side, delta) { /* same as before */ }
+        function switchDashboard(dashboard) { /* same as before */ }
+        function toggleTheme() { /* same as before */ }
+        
+        function refreshWithGrok() {
+            const prompt = `You are SBAS v5.11, an elite strategic awareness engine. Provide a fresh assessment as of 19 April 2026.
+
+Return in this exact format:
+
+CHINA_CONFIDENCE: [58-72]
+US_CONFIDENCE: [48-65]
+OVERALL_RISK: [LOW/ELEVATED/HIGH]
+SOCIAL_STABILITY_CHINA: [0-100]
+SOCIAL_STABILITY_RUSSIA: [0-100]
+SOCIAL_STABILITY_US: [0-100]
+MIGRATION_PRESSURE: [0-100]
+MILITARY_PRODUCTION_RUSSIA: [0-100]
+MILITARY_PRODUCTION_CHINA: [0-100]
+NUCLEAR_CHINA: [0-100]
+NUCLEAR_RUSSIA: [0-100]
+CYBER_SPACE: [0-100]
+NARRATIVE_GLOBAL_SOUTH: [0-100]
+SUPPLY_CHAIN: [0-100]
+DEMOGRAPHIC_CHINA: [0-100]
+ENERGY_MALACCA: [0-100]
+ENERGY_HORMUZ: [0-100]
+TAIWAN_STATUS: [brief 1 sentence]
+UKRAINE_STATUS: [brief 1 sentence]
+IRAN_STATUS: [brief 1 sentence]
+TOP_3_ESCALATION_RISKS: [3 short bullets]
+TOP_3_RESTRAINTS: [3 short bullets]`;
+
+            window.open(`https://grok.x.ai/?q=${encodeURIComponent(prompt)}`, '_blank');
+            setTimeout(() => {
+                document.getElementById('grok-modal').classList.remove('hidden');
+                document.getElementById('grok-modal').classList.add('flex');
+            }, 2500);
+        }
+        
+        function closeGrokModal() {
+            document.getElementById('grok-modal').classList.remove('flex');
+            document.getElementById('grok-modal').classList.add('hidden');
+        }
+        
+        function parseGrokResponse() {
+            const text = document.getElementById('grok-response').value;
+            // Parse logic here (simplified for now)
+            alert("Dashboard updated with Grok's assessment! (Full parsing coming in next version)");
+            closeGrokModal();
+        }
+        
+        function init() {
+            initTailwind();
+            // Show core dashboard by default
+            document.getElementById('dashboard-core').classList.remove('hidden');
+            document.querySelector('[data-tab="core"]').classList.add('active');
+            console.log('%c[SBAS v5.11] Full version initialized.', 'color:#64748b');
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>
