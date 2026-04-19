@@ -25,6 +25,7 @@
         .dashboard-tab.active { background: #1e2937; color: white; border-radius: 12px; }
         .grok-btn { background: linear-gradient(135deg, #1e5f8a 0%, #3b82f6 100%); }
         .grok-btn:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
+        #paste-area { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-[#0a0f1a] text-slate-200">
@@ -42,6 +43,12 @@
             </div>
             
             <div class="flex items-center gap-x-2">
+                <!-- Paste Button -->
+                <button onclick="togglePasteArea()" class="px-4 py-2 text-sm font-medium flex items-center gap-x-2 text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-paste"></i>
+                    <span>Paste</span>
+                </button>
+                
                 <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-moon fa-lg" id="theme-icon"></i>
                 </button>
@@ -225,14 +232,17 @@
         </div>
     </div>
 
-    <!-- Paste Grok Response -->
-    <div class="max-w-7xl mx-auto px-6 pb-16">
+    <!-- Paste Grok Response (Hidden by default) -->
+    <div id="paste-area" class="hidden max-w-7xl mx-auto px-6 pb-16">
         <div class="glass rounded-3xl p-8 premium-shadow">
             <div class="flex items-center justify-between mb-4">
                 <div class="font-semibold text-xl">Paste Grok's Response</div>
-                <button onclick="parseGrokResponse()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Parse &amp; Update</button>
+                <button onclick="togglePasteArea()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times fa-lg"></i></button>
             </div>
             <textarea id="grok-response" class="w-full h-64 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono" placeholder="Paste Grok's full response here..."></textarea>
+            <div class="flex justify-end mt-4">
+                <button onclick="parseGrokResponse()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Parse &amp; Update</button>
+            </div>
         </div>
     </div>
 
@@ -286,6 +296,18 @@
                 body.classList.add('bg-[#0a0f1a]', 'text-slate-200');
                 document.getElementById('theme-icon').classList.remove('fa-sun');
                 document.getElementById('theme-icon').classList.add('fa-moon');
+            }
+        }
+        
+        function togglePasteArea() {
+            const pasteArea = document.getElementById('paste-area');
+            pasteArea.classList.toggle('hidden');
+            
+            // Scroll to paste area when shown
+            if (!pasteArea.classList.contains('hidden')) {
+                setTimeout(() => {
+                    pasteArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
             }
         }
         
@@ -419,7 +441,7 @@ Return your response using clear section headers matching the structure above. B
             document.getElementById('dashboard-core').classList.remove('hidden');
             document.querySelector('[data-tab="core"]').classList.add('active');
             
-            console.log('%c[SBAS v7.0] Final version with optimized companion prompt.', 'color:#64748b');
+            console.log('%c[SBAS v7.0] Final clean version with collapsible paste area.', 'color:#64748b');
         }
         
         window.onload = init;
