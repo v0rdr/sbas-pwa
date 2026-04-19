@@ -25,8 +25,6 @@
         .dashboard-tab.active { background: #1e2937; color: white; border-radius: 12px; }
         .grok-btn { background: linear-gradient(135deg, #1e5f8a 0%, #3b82f6 100%); }
         .grok-btn:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
-        .metric-row { transition: all 0.2s ease; }
-        .metric-row:hover { background: rgba(148, 163, 184, 0.08); border-radius: 8px; }
     </style>
 </head>
 <body class="bg-[#0a0f1a] text-slate-200">
@@ -69,8 +67,8 @@
             </div>
         </div>
 
-        <!-- Dashboard Tabs -->
-        <div class="flex flex-wrap gap-2 mb-6" id="dashboard-tabs">
+        <!-- Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6">
             <button onclick="switchDashboard('core')" class="dashboard-tab active px-4 py-2 text-sm font-medium" data-tab="core">Core Competition</button>
             <button onclick="switchDashboard('society')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="society">Economics &amp; Society</button>
             <button onclick="switchDashboard('military')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="military">Military &amp; Nuclear</button>
@@ -242,6 +240,7 @@
     <script>
         function initTailwind() {}
         let chartInstance = null;
+        
         function createConfidenceChart() { /* same as before */ }
         function adjustScore(side, delta) { /* same as before */ }
         function switchDashboard(dashboard) { /* same as before */ }
@@ -275,11 +274,20 @@ IRAN_STATUS: [brief 1 sentence]
 TOP_3_ESCALATION_RISKS: [3 short bullets]
 TOP_3_RESTRAINTS: [3 short bullets]`;
 
-            window.open(`https://grok.x.ai/?q=${encodeURIComponent(prompt)}`, '_blank');
+            // Try to open Grok app first
+            const grokAppUrl = `x://grok?text=${encodeURIComponent(prompt)}`;
+            window.location.href = grokAppUrl;
+            
+            // Fallback to web version after 1.5 seconds if app doesn't open
             setTimeout(() => {
-                document.getElementById('grok-modal').classList.remove('hidden');
-                document.getElementById('grok-modal').classList.add('flex');
-            }, 2500);
+                window.open(`https://grok.x.ai/?q=${encodeURIComponent(prompt)}`, '_blank');
+                
+                // Show paste modal
+                setTimeout(() => {
+                    document.getElementById('grok-modal').classList.remove('hidden');
+                    document.getElementById('grok-modal').classList.add('flex');
+                }, 3000);
+            }, 1500);
         }
         
         function closeGrokModal() {
@@ -289,17 +297,46 @@ TOP_3_RESTRAINTS: [3 short bullets]`;
         
         function parseGrokResponse() {
             const text = document.getElementById('grok-response').value;
-            // Parse logic here (simplified for now)
-            alert("Dashboard updated with Grok's assessment! (Full parsing coming in next version)");
+            if (!text.trim()) {
+                alert("Please paste Grok's response first.");
+                return;
+            }
+            
+            // Parse logic (simplified)
+            const chinaMatch = text.match(/CHINA_CONFIDENCE:\s*(\d+)/i);
+            const usMatch = text.match(/US_CONFIDENCE:\s*(\d+)/i);
+            
+            if (chinaMatch) {
+                const val = parseInt(chinaMatch[1]);
+                document.getElementById('china-score').innerText = val;
+                document.getElementById('china-bar').style.width = val + '%';
+                localStorage.setItem('sbas_china_score', val);
+            }
+            
+            if (usMatch) {
+                const val = parseInt(usMatch[1]);
+                document.getElementById('us-score').innerText = val;
+                document.getElementById('us-bar').style.width = val + '%';
+                localStorage.setItem('sbas_us_score', val);
+            }
+            
+            const now = new Date();
+            document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            
             closeGrokModal();
+            
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
+            toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Dashboard updated with Grok's assessment</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.transition = 'all 0.4s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 2400);
         }
         
         function init() {
             initTailwind();
-            // Show core dashboard by default
             document.getElementById('dashboard-core').classList.remove('hidden');
             document.querySelector('[data-tab="core"]').classList.add('active');
-            console.log('%c[SBAS v5.11] Full version initialized.', 'color:#64748b');
+            console.log('%c[SBAS v5.11] Updated with Grok app support.', 'color:#64748b');
         }
         window.onload = init;
     </script>
