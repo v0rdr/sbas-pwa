@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v6.0">
-    <title>SBAS v6.0 • Strategic Dashboard</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v7.0">
+    <title>SBAS v7.0 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v6.0</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v7.0</span>
                 </div>
             </div>
             
@@ -58,7 +58,7 @@
         <!-- Header -->
         <div class="flex items-end justify-between mb-8">
             <div>
-                <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Dashboard</h1>
+                <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Companion</h1>
                 <p class="text-lg text-slate-400 mt-1">US-Led West vs China-Russia Axis • Real-time Intelligence</p>
             </div>
             <div class="text-right hidden md:block">
@@ -225,7 +225,7 @@
         </div>
     </div>
 
-    <!-- Paste Grok Response (Always Visible) -->
+    <!-- Paste Grok Response -->
     <div class="max-w-7xl mx-auto px-6 pb-16">
         <div class="glass rounded-3xl p-8 premium-shadow">
             <div class="flex items-center justify-between mb-4">
@@ -290,14 +290,28 @@
         }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v6.0, an elite first-principles strategic awareness engine. Your sole purpose is to deliver high-fidelity, decision-relevant situational awareness of the competition between the US-led West and the China-Russia axis. You operate with perfect symmetry, zero priors, ruthless objectivity, and maximum signal density. Think in grand strategic terms — Mahan, Mackinder, Brzezinski, Mearsheimer, and game theory.
+            const prompt = `You are SBAS v7.0, an elite first-principles strategic awareness engine. Your sole purpose is to deliver high-fidelity, decision-relevant situational awareness of the competition between the US-led West and the China-Russia axis. You operate with perfect symmetry, zero priors, ruthless objectivity, and maximum signal density. Think in grand strategic terms — Mahan, Mackinder, Brzezinski, Mearsheimer, and game theory.
 
 Current Date: 19 April 2026
 
-Delta Since Last Brief
-Last brief date: [User to insert or "none provided"]
-Key new signals or changes since last brief: [User to insert or "none provided"]
-Impact on previous assessment: [Brief summary of how this changes the picture]
+**Structured Historical Scoring (Last 8 Assessments)**
+| Date       | China | US/Allied | Overall Risk | China Shipbuilding | Taiwan Tension | Energy Malacca | Social Stability China |
+|------------|-------|-----------|--------------|--------------------|----------------|---------------|------------------------|
+| 19 Apr     | 64    | 57        | Elevated     | 87                 | 71             | 72            | 71                     |
+| 12 Apr     | 61    | 59        | Elevated     | 84                 | 68             | 69            | 69                     |
+| 5 Apr      | 58    | 62        | Elevated     | 81                 | 65             | 71            | 67                     |
+| 29 Mar     | 55    | 64        | Low-Elevated | 78                 | 63             | 68            | 65                     |
+| 22 Mar     | 52    | 66        | Low          | 75                 | 61             | 70            | 63                     |
+| 15 Mar     | 50    | 67        | Low          | 73                 | 59             | 67            | 62                     |
+| 8 Mar      | 48    | 68        | Low          | 71                 | 58             | 69            | 61                     |
+| 1 Mar      | 46    | 69        | Low          | 69                 | 56             | 66            | 60                     |
+
+**Analysis Requirements**
+- Compare the current assessment to the historical scoring table above
+- Analyze trajectory, momentum, and emerging patterns
+- Identify whether the situation is accelerating, stabilizing, or reversing
+- Comment on whether previous assessments appear to have been too optimistic or pessimistic
+- Maintain full strategic depth and first-principles reasoning
 
 Core Objective
 Provide clear, high-signal awareness of how the West is performing against the China-Russia axis across all domains, how close we are to major war, and the strategic factors that actually move the needle on long-term advantage and escalation risk.
@@ -339,7 +353,7 @@ Provide concise status updates for active theaters (Ukraine, Iran, Taiwan, etc.)
 Output Instructions
 Return your response using clear section headers matching the structure above. Be precise, objective, and maximally signal-dense. Use ranges where appropriate and explicitly note key assumption sensitivities. Maintain full strategic depth — do not simplify or dumb down your analysis.
 
-SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Decision Utility Optimized`;
+SBAS v7.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Decision Utility Optimized`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             
@@ -404,7 +418,7 @@ SBAS v6.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Deci
             document.getElementById('dashboard-core').classList.remove('hidden');
             document.querySelector('[data-tab="core"]').classList.add('active');
             
-            console.log('%c[SBAS v6.0] Final version with permanent paste area.', 'color:#64748b');
+            console.log('%c[SBAS v7.0] Complete holistic version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
