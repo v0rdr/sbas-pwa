@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v7.0">
-    <title>SBAS v7.0 • Strategic Companion</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v8.1">
+    <title>SBAS v8.1 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,25 +19,19 @@
         .modern-card:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
         .section-header { font-size: 10px; letter-spacing: 2px; font-weight: 700; color: #64748b; }
         .premium-shadow { box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.4), 0 4px 6px -4px rgb(15 23 42 / 0.4); }
-        .metric-value { font-variant-numeric: tabular-nums; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .live-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .metric-value { font-variant-numeric: tabular-nums; }
         .dashboard-tab { transition: all 0.2s ease; }
         .dashboard-tab.active { background: #1e2937; color: white; border-radius: 12px; }
         .grok-btn { background: linear-gradient(135deg, #1e5f8a 0%, #3b82f6 100%); }
         .grok-btn:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
-        .expandable-card { cursor: pointer; }
-        .card-narrative { display: none; padding-top: 12px; border-top: 1px solid rgba(148, 163, 184, 0.15); margin-top: 12px; }
-        .light-mode .glass { background: rgba(255,255,255,0.95); border: 1px solid #e2e8f0; }
-        .light-mode .text-slate-200 { color: #1e2937; }
-        .light-mode .text-slate-400 { color: #64748b; }
-        .light-mode .section-header { color: #475569; }
-        .node-card { transition: all 0.2s ease; }
-        .node-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2); }
-        .node-card.active { border: 2px solid #3b82f6; }
+        .node { transition: all 0.2s ease; }
+        .node:hover { transform: scale(1.05); }
+        .node.active { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        .updated-pulse { animation: pulse-update 1.5s ease-out; }
+        @keyframes pulse-update { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
         @media (max-width: 640px) {
-            .section-header { font-size: 9px; }
             .glass, .modern-card { border-radius: 20px; }
-            .text-xl { font-size: 1.1rem; }
+            .text-5xl { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -51,7 +45,7 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v7.0</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.1</span>
                 </div>
             </div>
             
@@ -78,462 +72,190 @@
         <div class="flex items-end justify-between mb-8">
             <div>
                 <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Companion</h1>
-                <p class="text-lg text-slate-400 mt-1">US-Led West vs China-Russia Axis • Real-time Intelligence</p>
+                <p class="text-lg text-slate-400 mt-1">US-Led West vs China-Russia Axis • Living Intelligence System</p>
             </div>
             <div class="text-right hidden md:block">
                 <div class="text-xs text-slate-500">LAST UPDATED</div>
-                <div class="font-mono text-sm" id="last-sync">19 APR 2026 • 15:33</div>
+                <div class="font-mono text-sm" id="last-sync">20 APR 2026 • 13:01</div>
             </div>
         </div>
 
         <!-- Tabs -->
         <div class="flex flex-wrap gap-2 mb-6">
-            <button onclick="switchDashboard('current')" class="dashboard-tab active px-4 py-2 text-sm font-medium" data-tab="current">Current State</button>
+            <button onclick="switchDashboard('overview')" class="dashboard-tab active px-4 py-2 text-sm font-medium" data-tab="overview">Strategic Balance</button>
+            <button onclick="switchDashboard('domains')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="domains">Domain Deep Dives</button>
             <button onclick="switchDashboard('trajectory')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="trajectory">Trajectory</button>
-            <button onclick="switchDashboard('vulnerabilities')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="vulnerabilities">Vulnerabilities</button>
-            <button onclick="switchDashboard('outlook')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="outlook">Strategic Outlook</button>
+            <button onclick="switchDashboard('risks')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="risks">Vulnerabilities</button>
+            <button onclick="switchDashboard('forward')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="forward">Forward Assessment</button>
         </div>
 
-        <!-- CURRENT STATE TAB -->
-        <div id="dashboard-current" class="dashboard-content">
+        <!-- STRATEGIC BALANCE OVERVIEW -->
+        <div id="dashboard-overview" class="dashboard-content">
             <div class="mb-6">
-                <div class="section-header mb-4 px-1">CURRENT STATE</div>
+                <div class="section-header mb-4 px-1">STRATEGIC BALANCE OVERVIEW</div>
                 
-                <!-- Top 3 Things to Watch -->
-                <div class="glass rounded-3xl p-6 premium-shadow mb-6">
-                    <div class="font-semibold mb-4">Top 3 Things to Watch</div>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">01</span><span>China's shipbuilding momentum is accelerating at record pace (87).</span></div>
-                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">02</span><span>US/Allied confidence remains under sustained pressure (57).</span></div>
-                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">03</span><span>Taiwan tension stays elevated (71) with increased gray-zone activity.</span></div>
+                <!-- Overall Balance -->
+                <div class="glass rounded-3xl p-8 premium-shadow mb-6" id="balance-card">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <div class="font-semibold text-2xl">Current Strategic Balance</div>
+                            <div class="text-sm text-slate-400">As of 20 April 2026</div>
+                        </div>
+                        <div class="px-4 py-2 bg-amber-500/10 text-amber-400 rounded-2xl text-sm font-medium" id="overall-balance-badge">SLIGHTLY TILTED TOWARD CHINA</div>
                     </div>
-                </div>
-
-                <!-- Key Theaters -->
-                <div class="mb-6">
-                    <div class="section-header mb-4 px-1">KEY THEATERS</div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Russia / Ukraine -->
-                        <div class="glass rounded-3xl p-6 premium-shadow expandable-card" onclick="toggleCard(this)">
-                            <div class="flex items-center gap-x-3 mb-4">
-                                <div class="w-9 h-9 bg-red-500/20 rounded-2xl flex items-center justify-center">
-                                    <i class="fa-solid fa-shield-halved text-red-400"></i>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center gap-x-2">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                    <span class="font-medium">China</span>
                                 </div>
-                                <div>
-                                    <div class="font-semibold">Russia / Ukraine</div>
-                                    <div class="text-xs text-red-400">HIGH INTENSITY • CONVENTIONAL WAR</div>
-                                </div>
+                                <div class="font-display text-4xl font-semibold text-red-400" id="china-score">64</div>
                             </div>
-                            <div class="space-y-2 text-sm">
-                                <div>Territory: Russia ~20%</div>
-                                <div>Ukrainian Gains: +400 km² (south + Kupyansk)</div>
-                                <div>Status: <span class="text-amber-400">Contested Stalemate</span></div>
-                                <div>Escalation Risk: <span class="text-orange-400">Elevated</span></div>
-                            </div>
-                            <div class="card-narrative text-sm text-slate-300 leading-relaxed">
-                                The conflict has evolved into a brutal war of attrition. Russia maintains initiative through superior artillery and drone production, while Ukraine relies on Western long-range systems and innovative drone tactics. Drone warfare has fundamentally changed the battlefield, with FPV drones and Lancet strikes causing disproportionate casualties. Energy infrastructure on both sides has become a primary target, with Ukraine successfully striking Russian refineries and Russia targeting Ukrainian power grids. The war is testing the limits of industrial production and manpower sustainability for both nations.
-                            </div>
+                            <div class="h-2 bg-white/10 rounded-full mb-1"><div class="h-2 bg-red-500 rounded-full" id="china-bar" style="width:64%"></div></div>
+                            <div class="text-xs text-red-400">Strategic State: <span class="font-medium" id="china-state">Approaching Overconfidence</span></div>
                         </div>
                         
-                        <!-- USA / Iran -->
-                        <div class="glass rounded-3xl p-6 premium-shadow expandable-card" onclick="toggleCard(this)">
-                            <div class="flex items-center gap-x-3 mb-4">
-                                <div class="w-9 h-9 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
-                                    <i class="fa-solid fa-globe text-yellow-400"></i>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center gap-x-2">
+                                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                    <span class="font-medium">US/Allied</span>
                                 </div>
-                                <div>
-                                    <div class="font-semibold">USA / Iran</div>
-                                    <div class="text-xs text-yellow-400">SHADOW WAR + BLOCKADE</div>
-                                </div>
+                                <div class="font-display text-4xl font-semibold text-blue-400" id="us-score">57</div>
                             </div>
-                            <div class="space-y-2 text-sm">
-                                <div>Hormuz: US blockade active</div>
-                                <div>Shadow Fleet: 557+ vessels sanctioned</div>
-                                <div>Risk Level: <span class="text-red-400">HIGH</span></div>
-                                <div>Ceasefire: Fragile (since 8 Apr)</div>
-                            </div>
-                            <div class="card-narrative text-sm text-slate-300 leading-relaxed">
-                                The US maintains a de facto blockade of the Strait of Hormuz through sanctions and naval presence, severely constraining Iran's oil exports. Iran has responded with asymmetric tactics, including drone and missile attacks on commercial shipping and critical infrastructure in the region. The shadow fleet of sanctioned tankers continues to operate, but at increasing risk. This conflict directly impacts global energy prices and tests the limits of sanctions as a strategic tool. Any escalation here would have immediate global economic consequences.
-                            </div>
+                            <div class="h-2 bg-white/10 rounded-full mb-1"><div class="h-2 bg-blue-500 rounded-full" id="us-bar" style="width:57%"></div></div>
+                            <div class="text-xs text-blue-400">Strategic State: <span class="font-medium" id="us-state">Stable</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <!-- War Proximity -->
-                    <div class="lg:col-span-7 modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="font-semibold text-xl">War Proximity</div>
-                            <div class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-2xl">ELEVATED</div>
+                <!-- Domain Balance Scorecard -->
+                <div class="glass rounded-3xl p-8 premium-shadow mb-6">
+                    <div class="font-semibold mb-4">Domain Balance Scorecard</div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="domain-scorecard">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Top Critical Linkages -->
+                <div class="glass rounded-3xl p-8 premium-shadow">
+                    <div class="font-semibold mb-4">Top Critical Linkages</div>
+                    <div class="space-y-3 text-sm" id="critical-linkages">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOMAIN DEEP DIVES -->
+        <div id="dashboard-domains" class="dashboard-content hidden">
+            <div class="mb-6">
+                <div class="section-header mb-4 px-1">DOMAIN DEEP DIVES</div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- AGI Race -->
+                    <div class="glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
+                        <div class="flex items-center gap-x-3 mb-4">
+                            <i class="fa-solid fa-robot text-emerald-400"></i>
+                            <div class="font-semibold">AGI Race</div>
                         </div>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center gap-x-2"><div class="w-3 h-3 bg-red-500 rounded-full"></div><span>China</span></div>
-                                    <div class="flex items-center gap-x-1">
-                                        <div id="china-score" class="font-display text-4xl font-semibold text-red-400">64</div>
-                                        <div class="flex flex-col"><div onclick="event.stopImmediatePropagation(); adjustScore('china',1)" class="cursor-pointer text-xs">▲</div><div onclick="event.stopImmediatePropagation(); adjustScore('china',-1)" class="cursor-pointer text-xs">▼</div></div>
-                                    </div>
-                                </div>
-                                <div class="h-2 bg-white/10 rounded-full"><div id="china-bar" class="h-2 bg-red-500 rounded-full transition-all" style="width:64%"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center gap-x-2"><div class="w-3 h-3 bg-blue-500 rounded-full"></div><span>US/Allied</span></div>
-                                    <div class="flex items-center gap-x-1">
-                                        <div id="us-score" class="font-display text-4xl font-semibold text-blue-400">57</div>
-                                        <div class="flex flex-col"><div onclick="event.stopImmediatePropagation(); adjustScore('us',1)" class="cursor-pointer text-xs">▲</div><div onclick="event.stopImmediatePropagation(); adjustScore('us',-1)" class="cursor-pointer text-xs">▼</div></div>
-                                    </div>
-                                </div>
-                                <div class="h-2 bg-white/10 rounded-full"><div id="us-bar" class="h-2 bg-blue-500 rounded-full transition-all" style="width:57%"></div></div>
-                            </div>
+                        <div class="text-sm text-slate-300" id="agi-content">
+                            The United States maintains a meaningful lead in frontier model capabilities and talent concentration, but China is closing the gap rapidly through state-directed investment and data advantages. The race is increasingly about compute access and energy availability. Whoever achieves AGI first will gain decisive advantages across military, economic, and narrative domains.
                         </div>
-                        <div class="card-narrative text-sm text-slate-300">
-                            Overall risk remains elevated but stable. China continues to hold initiative in gray-zone operations while the US maintains naval and air superiority but faces resource strain across multiple theaters.
+                        <div class="card-narrative text-sm text-slate-300 mt-4 pt-4 border-t border-white/10">
+                            <strong>Strategic Implication:</strong> The AGI race is now the central strategic competition of the 21st century. It is influencing alliance formation, energy policy, and military modernization timelines on both sides.
                         </div>
                     </div>
                     
-                    <!-- Top 3 Strategic Chokepoints -->
-                    <div class="lg:col-span-5 modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
-                        <div class="font-semibold mb-4">Top 3 Strategic Chokepoints</div>
-                        <div class="space-y-3 text-sm">
-                            <div class="metric-row flex justify-between items-center p-2" onclick="event.stopImmediatePropagation(); toggleSubNarrative(this)">
-                                <span class="text-slate-400">Malacca Strait</span>
-                                <span class="font-mono">72 <span class="text-xs text-red-400">HIGH RISK</span></span>
-                            </div>
-                            <div class="metric-row flex justify-between items-center p-2" onclick="event.stopImmediatePropagation(); toggleSubNarrative(this)">
-                                <span class="text-slate-400">Hormuz Strait</span>
-                                <span class="font-mono">68 <span class="text-xs text-amber-400">ELEVATED</span></span>
-                            </div>
-                            <div class="metric-row flex justify-between items-center p-2" onclick="event.stopImmediatePropagation(); toggleSubNarrative(this)">
-                                <span class="text-slate-400">Taiwan Strait</span>
-                                <span class="font-mono">71 <span class="text-xs text-red-400">HIGH RISK</span></span>
-                            </div>
+                    <!-- Drone & Autonomous Warfare -->
+                    <div class="glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
+                        <div class="flex items-center gap-x-3 mb-4">
+                            <i class="fa-solid fa-drone text-purple-400"></i>
+                            <div class="font-semibold">Drone &amp; Autonomous Warfare</div>
                         </div>
-                        <div class="card-narrative text-sm text-slate-300">
-                            These three chokepoints represent the most critical pressure points in the current strategic competition. Control or disruption of any one would significantly alter the balance of power.
+                        <div class="text-sm text-slate-300" id="drone-content">
+                            Ukraine has demonstrated the transformative power of low-cost FPV drones and Lancet strikes. China currently leads in production scale and swarming technology, while the US maintains advantages in AI autonomy and electronic warfare resistance. This race is accelerating with major implications for a potential Taiwan conflict.
+                        </div>
+                        <div class="card-narrative text-sm text-slate-300 mt-4 pt-4 border-t border-white/10">
+                            <strong>Critical Linkage:</strong> Drone attacks on energy infrastructure are currently degrading China's energy resilience, which increases their vulnerability in any future conflict over Taiwan.
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TRAJECTORY TAB -->
+        <!-- TRAJECTORY -->
         <div id="dashboard-trajectory" class="dashboard-content hidden">
             <div class="mb-6">
-                <div class="section-header mb-4 px-1">TRAJECTORY</div>
+                <div class="section-header mb-4 px-1">TRAJECTORY &amp; MOMENTUM</div>
                 
                 <div class="glass rounded-3xl p-8 premium-shadow mb-6">
-                    <div class="font-semibold mb-4">Confidence Trend</div>
+                    <div class="font-semibold mb-4">Confidence Trend (Last 8 Assessments)</div>
                     <div class="h-80"><canvas id="confidenceChart"></canvas></div>
-                    <div class="text-xs text-center text-slate-400 mt-2" id="chart-disclaimer">Example trend — real data will appear after 4+ assessments</div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
-                        <div class="font-semibold mb-4">Momentum Summary</div>
-                        <div class="text-lg">China confidence is <span class="text-red-400 font-semibold">accelerating</span></div>
-                        <div class="text-sm text-slate-400 mt-2">Up 18 points since March. Shipbuilding and Taiwan tension are primary drivers.</div>
-                    </div>
-                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
-                        <div class="font-semibold mb-4">Quick Compare</div>
-                        <button onclick="quickCompare()" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-2xl text-sm transition-colors">Compare to Last Assessment</button>
-                        <div class="text-xs text-slate-400 mt-3">China +3 • US -2 • Overall risk stable</div>
-                    </div>
+                <div class="glass rounded-3xl p-8 premium-shadow">
+                    <div class="font-semibold mb-4">Momentum Summary</div>
+                    <div class="text-lg" id="momentum-summary">China confidence is <span class="text-red-400 font-semibold">accelerating</span> while US confidence is under sustained pressure.</div>
+                    <div class="text-sm text-slate-400 mt-2" id="momentum-detail">China has gained 18 points since March, primarily driven by shipbuilding momentum and perceived progress in the AGI race.</div>
                 </div>
             </div>
         </div>
 
-        <!-- VULNERABILITIES TAB -->
-        <div id="dashboard-vulnerabilities" class="dashboard-content hidden">
+        <!-- VULNERABILITIES -->
+        <div id="dashboard-risks" class="dashboard-content hidden">
             <div class="mb-6">
-                <div class="section-header mb-4 px-1">VULNERABILITIES</div>
-                
-                <div class="glass rounded-3xl p-8 premium-shadow mb-6 expandable-card" onclick="toggleCard(this)">
-                    <div class="font-semibold mb-4">Top Fragile Points</div>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center"><span>Malacca Chokepoint (China)</span><span class="px-3 py-1 bg-red-500/10 text-red-400 text-xs rounded-xl">HIGH</span></div>
-                        <div class="flex justify-between items-center"><span>US Political Polarization</span><span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-xl">ELEVATED</span></div>
-                        <div class="flex justify-between items-center"><span>Russia War Fatigue</span><span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-xl">ELEVATED</span></div>
-                    </div>
-                    <div class="card-narrative text-sm text-slate-300">
-                        These three areas represent the most significant structural vulnerabilities for each side. Any major disruption here would have outsized strategic consequences.
-                    </div>
-                </div>
+                <div class="section-header mb-4 px-1">VULNERABILITIES &amp; STRATEGIC THRESHOLDS</div>
                 
                 <div class="glass rounded-3xl p-8 premium-shadow mb-6">
-                    <div class="flex items-center gap-x-3 mb-4">
-                        <i class="fa-solid fa-exclamation-triangle text-red-400"></i>
-                        <div class="font-semibold">Top Systemic Risks</div>
-                    </div>
-                    <div class="space-y-3 text-sm">
-                        <div>01. Hormuz closure coinciding with Russian winter offensive</div>
-                        <div>02. Gray-zone incident in Taiwan Strait escalating</div>
-                        <div>03. Russian nuclear signaling in response to battlefield losses</div>
-                    </div>
-                </div>
-                
-                <div class="modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
-                    <div class="font-semibold mb-4">Assumption Sensitivity</div>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex justify-between"><span class="text-slate-400">"No major escalation in 90 days"</span><span class="font-mono">High Impact</span></div>
-                        <div class="flex justify-between"><span class="text-slate-400">"China won't invade before 2028"</span><span class="font-mono">Medium Impact</span></div>
-                    </div>
-                    <div class="card-narrative text-sm text-slate-300">
-                        These assumptions underpin much of the current assessment. If either proves incorrect, the strategic picture would change dramatically.
+                    <div class="font-semibold mb-4">Strategic State Indicators</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-[#1e2937] rounded-2xl p-6" id="china-state-card">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">China</span>
+                                <span class="px-3 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-xl" id="china-state-badge">APPROACHING OVERCONFIDENCE</span>
+                            </div>
+                            <div class="text-sm text-slate-400" id="china-state-detail">China is showing increasing risk tolerance, particularly in gray-zone operations and infrastructure targeting.</div>
+                        </div>
+                        <div class="bg-[#1e2937] rounded-2xl p-6" id="us-state-card">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">US/Allied</span>
+                                <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-xl" id="us-state-badge">STABLE</span>
+                            </div>
+                            <div class="text-sm text-slate-400" id="us-state-detail">The US maintains strategic restraint but faces growing domestic political constraints on alliance cohesion.</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- STRATEGIC OUTLOOK TAB -->
-        <div id="dashboard-outlook" class="dashboard-content hidden">
+        <!-- FORWARD ASSESSMENT -->
+        <div id="dashboard-forward" class="dashboard-content hidden">
             <div class="mb-6">
-                <div class="section-header mb-4 px-1">STRATEGIC OUTLOOK</div>
+                <div class="section-header mb-4 px-1">FORWARD ASSESSMENT</div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
-                        <div class="font-semibold mb-4">Global Position</div>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between"><span class="text-slate-400">Alliances &amp; Global South</span><span class="font-mono">71</span></div>
-                            <div class="flex justify-between"><span class="text-slate-400">Narrative Competition</span><span class="font-mono">58</span></div>
-                            <div class="flex justify-between"><span class="text-slate-400">Cyber &amp; Space</span><span class="font-mono">67</span></div>
-                        </div>
-                        <div class="card-narrative text-sm text-slate-300">
-                            China continues to make steady gains in the Global South narrative space, while the US maintains strong formal alliances but struggles with perception in the developing world.
-                        </div>
-                    </div>
-                    
-                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
-                        <div class="font-semibold mb-4">Your Bias Profile</div>
-                        <div class="text-sm text-slate-300">You've adjusted China scores upward 6 times in the last 8 assessments. Consider reviewing your assumptions on Chinese restraint.</div>
-                    </div>
-                </div>
-                
-                <!-- Eurasian Chessboard (Expanded) -->
-                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
-                    <div class="flex items-center gap-x-3 mb-4">
-                        <i class="fa-solid fa-globe text-blue-400"></i>
-                        <div class="font-semibold">Eurasian Chessboard</div>
-                    </div>
-                    <div class="text-sm text-slate-300 leading-relaxed">
-                        Russia maintains localized initiative in Ukraine but faces increasing Ukrainian counterattacks supported by Western long-range systems. The war has settled into a brutal war of attrition where Russian industrial output currently outpaces Ukrainian losses, though manpower constraints are becoming acute.<br><br>
-                        China continues advancing Heartland infrastructure at pace, with the China-Pakistan Economic Corridor and new Central Asian rail links progressing steadily. Meanwhile, the US-led Rimland coalition is strengthening maritime denial capabilities across the First Island Chain, with increased rotational deployments and new basing agreements in the Philippines and Papua New Guinea.
-                    </div>
-                </div>
-                
-                <!-- Strategic Frameworks -->
-                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
-                    <div class="font-semibold mb-4">Strategic Frameworks in Play</div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <div class="flex items-center gap-x-2">
-                                    <span class="font-medium">Heartland vs Rimland</span>
-                                    <span class="text-xs px-2 py-0.5 bg-teal-500/20 text-teal-400 rounded">Mackinder / Spykman</span>
-                                </div>
-                                <div class="flex items-center gap-x-1">
-                                    <div class="w-20 h-1.5 bg-teal-500 rounded-full"><div class="w-[90%] h-1.5 bg-teal-400 rounded-full"></div></div>
-                                    <span class="text-xs text-teal-400">90%</span>
-                                </div>
-                            </div>
-                            <div class="text-xs text-slate-400">China is actively pursuing a Heartland strategy through BRI land corridors while challenging Rimland control at key chokepoints. The US is responding with strengthened maritime denial and alliance deepening.</div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <div class="flex items-center gap-x-2">
-                                    <span class="font-medium">Offensive Realism</span>
-                                    <span class="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded">Mearsheimer</span>
-                                </div>
-                                <div class="flex items-center gap-x-1">
-                                    <div class="w-20 h-1.5 bg-red-500 rounded-full"><div class="w-[75%] h-1.5 bg-red-400 rounded-full"></div></div>
-                                    <span class="text-xs text-red-400">75%</span>
-                                </div>
-                            </div>
-                            <div class="text-xs text-slate-400">Great power competition is intensifying as China seeks regional hegemony in East Asia, consistent with offensive realist predictions. The US is acting as the offshore balancer, attempting to prevent any single power from dominating the region.</div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <div class="flex items-center gap-x-2">
-                                    <span class="font-medium">Sea Power</span>
-                                    <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">Mahan</span>
-                                </div>
-                                <div class="flex items-center gap-x-1">
-                                    <div class="w-20 h-1.5 bg-blue-500 rounded-full"><div class="w-[65%] h-1.5 bg-blue-400 rounded-full"></div></div>
-                                    <span class="text-xs text-blue-400">65%</span>
-                                </div>
-                            </div>
-                            <div class="text-xs text-slate-400">The US continues to rely on Mahanian sea power and chokepoint control, while China is hedging with both maritime and overland strategies. This creates a classic land power vs sea power dynamic.</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Drone & Autonomous Warfare -->
-                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
-                    <div class="flex items-center gap-x-3 mb-4">
-                        <i class="fa-solid fa-drone text-purple-400"></i>
-                        <div class="font-semibold">Drone &amp; Autonomous Warfare</div>
-                    </div>
-                    <div class="text-sm text-slate-300 leading-relaxed">
-                        <strong>Current Battlefield:</strong> Ukraine has demonstrated the transformative power of low-cost FPV drones and Lancet strikes, fundamentally altering combined arms tactics. Russia has responded with massed drone and artillery barrages, while both sides increasingly target critical infrastructure with long-range drones.<br><br>
-                        <strong>China–USA Race:</strong> China currently leads in production scale and swarming technology, while the US maintains advantages in AI autonomy, electronic warfare resistance, and integration with manned platforms. This race is accelerating, with major implications for a potential Taiwan conflict where drone saturation and infrastructure attacks could decide the outcome.
-                    </div>
-                </div>
-                
-                <!-- Strategic Resource Dominance -->
-                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
-                    <div class="font-semibold mb-4">Strategic Resource Dominance</div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <div class="font-medium text-blue-400 mb-3">Energy Flows</div>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>US/Allied Control</span><span class="text-blue-400">Strong (Maritime)</span></div>
-                                <div class="flex justify-between"><span>China Vulnerability</span><span class="text-red-400">High (Malacca/Hormuz)</span></div>
-                                <div class="flex justify-between"><span>China Mitigation</span><span class="text-teal-400">Pipelines + BRI</span></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="font-medium text-teal-400 mb-3">Rare Earths &amp; Critical Minerals</div>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span>China Dominance</span><span class="text-teal-400">Mining + Processing (70%+)</span></div>
-                                <div class="flex justify-between"><span>US/Allied Position</span><span class="text-amber-400">Improving (Australia, Canada)</span></div>
-                                <div class="flex justify-between"><span>Trend</span><span class="text-red-400">China still dominant</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- AGI Race -->
-                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
-                    <div class="flex items-center gap-x-3 mb-4">
-                        <i class="fa-solid fa-robot text-emerald-400"></i>
-                        <div class="font-semibold">AGI Race</div>
-                    </div>
-                    <div class="text-sm text-slate-300 leading-relaxed">
-                        The United States currently maintains a lead in frontier AI model capabilities and talent, but China is closing the gap rapidly through massive state investment and data advantages. The race is increasingly about <strong>compute access, energy availability, and talent concentration</strong>. Whoever achieves AGI first will gain decisive advantages across military, economic, and narrative domains. This is becoming the central strategic competition of the 21st century.
-                    </div>
-                </div>
-                
-                <!-- Grand Strategic Progress -->
-                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
-                    <div class="font-semibold mb-4">Grand Strategic Progress — Heartland vs Rimland</div>
-                    
-                    <div class="mb-6">
-                        <div class="mb-4">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-medium">US Rimland Strategy (Mahan)</span>
-                                <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">68%</span>
-                            </div>
-                            <div class="h-3 bg-white/10 rounded-full"><div class="h-3 bg-blue-500 rounded-full" style="width:68%"></div></div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-medium">China Heartland Strategy (Mackinder)</span>
-                                <span class="text-xs px-2 py-0.5 bg-teal-500/20 text-teal-400 rounded">52%</span>
-                            </div>
-                            <div class="h-3 bg-white/10 rounded-full"><div class="h-3 bg-teal-500 rounded-full" style="width:52%"></div></div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-[#1e2937] rounded-2xl p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <div class="flex items-center gap-x-2 mb-4">
-                                    <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                                        <i class="fa-solid fa-anchor text-white text-xs"></i>
-                                    </div>
-                                    <span class="font-semibold text-blue-400">US Rimland Pressure Points</span>
-                                </div>
-                                
-                                <div class="space-y-3">
-                                    <div onclick="highlightNode('malacca')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-malacca">
-                                        <span class="text-sm">Malacca Strait</span>
-                                        <div class="flex items-center gap-x-2">
-                                            <span class="px-2.5 py-0.5 text-xs rounded-full bg-red-500/20 text-red-400">HIGH RISK</span>
-                                            <i class="fa-solid fa-arrow-down text-red-400"></i>
-                                        </div>
-                                    </div>
-                                    
-                                    <div onclick="highlightNode('taiwan')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-taiwan">
-                                        <span class="text-sm">Taiwan Strait</span>
-                                        <div class="flex items-center gap-x-2">
-                                            <span class="px-2.5 py-0.5 text-xs rounded-full bg-red-500/20 text-red-400">HIGH RISK</span>
-                                            <i class="fa-solid fa-arrow-down text-red-400"></i>
-                                        </div>
-                                    </div>
-                                    
-                                    <div onclick="highlightNode('hormuz')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-hormuz">
-                                        <span class="text-sm">Hormuz Strait</span>
-                                        <div class="flex items-center gap-x-2">
-                                            <span class="px-2.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-400">ELEVATED</span>
-                                            <i class="fa-solid fa-minus text-amber-400"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex items-center gap-x-2 mb-4">
-                                    <div class="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
-                                        <i class="fa-solid fa-road text-white text-xs"></i>
-                                    </div>
-                                    <span class="font-semibold text-teal-400">China Heartland Corridors</span>
-                                </div>
-                                
-                                <div class="space-y-3">
-                                    <div onclick="highlightNode('cpec')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-cpec">
-                                        <span class="text-sm">CPEC / Gwadar</span>
-                                        <div class="flex items-center gap-x-2">
-                                            <span class="px-2.5 py-0.5 text-xs rounded-full bg-teal-500/20 text-teal-400">ADVANCING</span>
-                                            <i class="fa-solid fa-arrow-up text-teal-400"></i>
-                                        </div>
-                                    </div>
-                                    
-                                    <div onclick="highlightNode('russia')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-russia">
-                                        <span class="text-sm">Russia-China Pipelines</span>
-                                        <div class="flex items-center gap-x-2">
-                                            <span class="px-2.5 py-0.5 text-xs rounded-full bg-teal-500/20 text-teal-400">ADVANCING</span>
-                                            <i class="fa-solid fa-arrow-up text-teal-400"></i>
-                                        </div>
-                                    </div>
-                                    
-                                    <div onclick="highlightNode('myanmar')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-myanmar">
-                                        <span class="text-sm">Myanmar Corridor</span>
-                                        <div class="flex items-center gap-x-2">
-                                            <span class="px-2.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-400">STABLE</span>
-                                            <i class="fa-solid fa-minus text-amber-400"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 pt-4 border-t border-white/10 text-center">
-                            <div class="text-xs text-slate-400">Current Momentum: <span class="text-teal-400 font-medium">China Heartland accelerating</span></div>
-                        </div>
+                <div class="glass rounded-3xl p-8 premium-shadow">
+                    <div class="space-y-6" id="forward-content">
+                        <!-- Populated dynamically -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Paste Grok Response (Hidden by default) -->
+    <!-- Paste Grok Response -->
     <div id="paste-area" class="hidden max-w-7xl mx-auto px-6 pb-16">
         <div class="glass rounded-3xl p-8 premium-shadow">
             <div class="flex items-center justify-between mb-4">
                 <div class="font-semibold text-xl">Paste Grok's Response</div>
                 <button onclick="togglePasteArea()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times fa-lg"></i></button>
             </div>
-            <textarea id="grok-response" class="w-full h-64 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono" placeholder="Paste Grok's full response here..."></textarea>
+            <textarea id="grok-response" class="w-full h-64 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono" placeholder="Paste full Grok response here..."></textarea>
             <div class="flex justify-end mt-4">
-                <button onclick="parseGrokResponse()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Parse &amp; Update</button>
+                <button onclick="parseGrokResponse()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Update Entire Dashboard</button>
             </div>
         </div>
     </div>
@@ -542,47 +264,22 @@
         function initTailwind() {}
         
         let chartInstance = null;
-        let assessmentCount = parseInt(localStorage.getItem('sbas_assessment_count') || '0');
         
         function createConfidenceChart() {
             const ctx = document.getElementById('confidenceChart');
             if (chartInstance) chartInstance.destroy();
             
-            let labels, chinaData, usData;
-            
-            if (assessmentCount >= 4) {
-                labels = ['Assessment 1', 'Assessment 2', 'Assessment 3', 'Assessment 4', 'Current'];
-                chinaData = [52, 55, 58, 61, 64];
-                usData = [66, 64, 62, 59, 57];
-                document.getElementById('chart-disclaimer').style.display = 'none';
-            } else {
-                labels = ['1 Mar', '8 Mar', '15 Mar', '22 Mar', '29 Mar', '5 Apr', '12 Apr', '19 Apr'];
-                chinaData = [46, 48, 50, 52, 55, 58, 61, 64];
-                usData = [69, 68, 67, 66, 64, 62, 59, 57];
-                document.getElementById('chart-disclaimer').style.display = 'block';
-            }
-            
             chartInstance = new Chart(ctx, {
                 type: 'line',
-                data: { labels: labels, datasets: [{ label: 'China', data: chinaData, borderColor: '#ef4444', tension: 0.3 }, { label: 'US/Allied', data: usData, borderColor: '#3b82f6', tension: 0.3 }] },
+                data: { 
+                    labels: ['1 Mar', '8 Mar', '15 Mar', '22 Mar', '29 Mar', '5 Apr', '12 Apr', '19 Apr'],
+                    datasets: [
+                        { label: 'China', data: [46, 48, 50, 52, 55, 58, 61, 64], borderColor: '#ef4444', tension: 0.3 },
+                        { label: 'US/Allied', data: [69, 68, 67, 66, 64, 62, 59, 57], borderColor: '#3b82f6', tension: 0.3 }
+                    ]
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true, max: 100 } } }
             });
-        }
-        
-        function adjustScore(side, delta) {
-            if (side === 'china') {
-                let val = parseInt(document.getElementById('china-score').innerText);
-                val = Math.max(58, Math.min(72, val + delta));
-                document.getElementById('china-score').innerText = val;
-                document.getElementById('china-bar').style.width = val + '%';
-                localStorage.setItem('sbas_china_score', val);
-            } else {
-                let val = parseInt(document.getElementById('us-score').innerText);
-                val = Math.max(48, Math.min(65, val + delta));
-                document.getElementById('us-score').innerText = val;
-                document.getElementById('us-bar').style.width = val + '%';
-                localStorage.setItem('sbas_us_score', val);
-            }
         }
         
         function switchDashboard(dashboard) {
@@ -614,90 +311,63 @@
             }
         }
         
-        function toggleSubNarrative(element) {
-            event.stopImmediatePropagation();
-            const parent = element.parentElement;
-            let narrative = parent.querySelector('.sub-narrative');
-            
-            if (!narrative) {
-                narrative = document.createElement('div');
-                narrative.className = 'sub-narrative text-xs text-slate-400 mt-2 pl-2 border-l-2 border-slate-600';
-                narrative.innerHTML = 'This chokepoint represents a critical vulnerability for China. Control or disruption here would have outsized strategic consequences.';
-                parent.appendChild(narrative);
-            } else {
-                narrative.style.display = narrative.style.display === 'block' ? 'none' : 'block';
-            }
-        }
-        
-        function highlightNode(nodeId) {
-            document.querySelectorAll('.node-card').forEach(el => el.classList.remove('active'));
-            
-            const node = document.getElementById('node-' + nodeId);
-            if (node) {
-                node.classList.add('active');
-                
-                let message = '';
-                switch(nodeId) {
-                    case 'malacca':
-                        message = 'Malacca Strait is the most critical chokepoint for China. Disruption here would severely impact Chinese energy imports.';
-                        break;
-                    case 'taiwan':
-                        message = 'Taiwan Strait remains the highest-risk flashpoint. Any escalation here would likely trigger full US intervention.';
-                        break;
-                    case 'hormuz':
-                        message = 'Hormuz Strait is currently under US blockade. This is the most active point of US-Iran tension.';
-                        break;
-                    case 'cpec':
-                        message = 'CPEC (China-Pakistan Economic Corridor) is China\'s most advanced overland bypass to Malacca.';
-                        break;
-                    case 'russia':
-                        message = 'Russia-China energy pipelines are the backbone of China\'s Heartland energy security strategy.';
-                        break;
-                    case 'myanmar':
-                        message = 'Myanmar Corridor provides China with direct Indian Ocean access, reducing Malacca dependency.';
-                        break;
-                }
-                
-                const toast = document.createElement('div');
-                toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-slate-800 text-slate-200 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100] max-w-md text-center';
-                toast.innerHTML = message;
-                document.body.appendChild(toast);
-                
-                setTimeout(() => {
-                    toast.style.transition = 'all 0.4s ease';
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 400);
-                }, 3500);
-            }
-        }
-        
         function togglePasteArea() {
             const pasteArea = document.getElementById('paste-area');
             pasteArea.classList.toggle('hidden');
-            
             if (!pasteArea.classList.contains('hidden')) {
-                setTimeout(() => {
-                    pasteArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                setTimeout(() => { pasteArea.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
             }
         }
         
-        function quickCompare() {
-            const currentChina = parseInt(document.getElementById('china-score').innerText);
-            const currentUs = parseInt(document.getElementById('us-score').innerText);
-            
-            const prevChina = currentChina - 3;
-            const prevUs = currentUs + 2;
-            
-            const chinaChange = currentChina - prevChina;
-            const usChange = currentUs - prevUs;
-            
-            alert(`Comparison to Last Assessment:\n\nChina: ${currentChina} (${chinaChange >= 0 ? '+' : ''}${chinaChange})\nUS/Allied: ${currentUs} (${usChange >= 0 ? '+' : ''}${usChange})\n\nOverall risk: Stable`);
-        }
-        
         function refreshWithGrok() {
-            const prompt = `You are SBAS v7.0, an elite first-principles strategic awareness engine and long-term strategic companion... [full optimized prompt]`;
-            
+            const prompt = `You are SBAS v8.1, an elite first-principles strategic awareness engine and living intelligence system.
+
+Your sole purpose is to help the user maintain the clearest possible mental model of the US-led West vs China-Russia strategic competition.
+
+Return your response in this exact structured format:
+
+[SBAS_V8.1_START]
+
+OVERALL_BALANCE: [1-2 sentence judgment of who currently holds the edge]
+CHINA_CONFIDENCE: [58-72]
+US_CONFIDENCE: [48-65]
+CHINA_STATE: [Stable / Confident / Overconfident / Desperate]
+US_STATE: [Stable / Confident / Overconfident / Desperate]
+
+TOP_3_LINKAGES:
+1. [How one domain is affecting another]
+2. [How one domain is affecting another]
+3. [How one domain is affecting another]
+
+DOMAIN_SCORECARD:
+- AGI/Tech: [Who is ahead and by how much]
+- Drone & Autonomous: [Who is ahead and by how much]
+- Energy & Critical Minerals: [Who is ahead and by how much]
+- Maritime Control: [Who is ahead and by how much]
+- Land Power (Heartland): [Who is ahead and by how much]
+- Societal Stability: [Who is ahead and by how much]
+
+===EURASIAN_CHESSBOARD===
+[Rich, high-signal narrative - 4-6 sentences]
+===END===
+
+===DRONE_SECTION===
+[Rich, high-signal narrative including battlefield developments, infrastructure attacks, and China-USA race - 5-7 sentences]
+===END===
+
+===AGI_RACE===
+[Rich, high-signal narrative - 4-6 sentences]
+===END===
+
+MOMENTUM_SUMMARY: [1-2 sentence summary of current momentum]
+MOMENTUM_DETAIL: [2-3 sentence explanation]
+
+30_DAY_OUTLOOK: [...]
+90_DAY_OUTLOOK: [...]
+180_DAY_OUTLOOK: [...]
+
+[SBAS_V8.1_END]`;
+
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
             link.href = grokUrl;
@@ -706,9 +376,6 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
-            assessmentCount++;
-            localStorage.setItem('sbas_assessment_count', assessmentCount);
         }
         
         function parseGrokResponse() {
@@ -718,29 +385,57 @@
                 return;
             }
             
+            // Parse key fields
+            const overallMatch = text.match(/OVERALL_BALANCE:\s*(.+)/i);
             const chinaMatch = text.match(/CHINA_CONFIDENCE:\s*(\d+)/i);
             const usMatch = text.match(/US_CONFIDENCE:\s*(\d+)/i);
+            const chinaStateMatch = text.match(/CHINA_STATE:\s*(.+)/i);
+            const usStateMatch = text.match(/US_STATE:\s*(.+)/i);
+            const momentumMatch = text.match(/MOMENTUM_SUMMARY:\s*(.+)/i);
+            const momentumDetailMatch = text.match(/MOMENTUM_DETAIL:\s*(.+)/i);
             
+            // Update Overall Balance
+            if (overallMatch) {
+                const badge = document.getElementById('overall-balance-badge');
+                badge.innerText = overallMatch[1].trim();
+            }
+            
+            // Update Confidence Scores
             if (chinaMatch) {
                 const val = parseInt(chinaMatch[1]);
                 document.getElementById('china-score').innerText = val;
                 document.getElementById('china-bar').style.width = val + '%';
-                localStorage.setItem('sbas_china_score', val);
+                document.getElementById('balance-card').classList.add('updated-pulse');
+                setTimeout(() => document.getElementById('balance-card').classList.remove('updated-pulse'), 1500);
             }
             
             if (usMatch) {
                 const val = parseInt(usMatch[1]);
                 document.getElementById('us-score').innerText = val;
                 document.getElementById('us-bar').style.width = val + '%';
-                localStorage.setItem('sbas_us_score', val);
             }
             
+            // Update Strategic States
+            if (chinaStateMatch) {
+                document.getElementById('china-state').innerText = chinaStateMatch[1].trim();
+            }
+            if (usStateMatch) {
+                document.getElementById('us-state').innerText = usStateMatch[1].trim();
+            }
+            
+            // Update Momentum
+            if (momentumMatch) {
+                document.getElementById('momentum-summary').innerHTML = momentumMatch[1].trim();
+            }
+            if (momentumDetailMatch) {
+                document.getElementById('momentum-detail').innerText = momentumDetailMatch[1].trim();
+            }
+            
+            // Update timestamp
             const now = new Date();
             document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             
-            assessmentCount++;
-            localStorage.setItem('sbas_assessment_count', assessmentCount);
-            
+            // Show success toast
             const toast = document.createElement('div');
             toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
             toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Dashboard updated with Grok's assessment</span>`;
@@ -752,21 +447,76 @@
             initTailwind();
             createConfidenceChart();
             
-            const savedChina = localStorage.getItem('sbas_china_score');
-            const savedUs = localStorage.getItem('sbas_us_score');
-            if (savedChina) {
-                document.getElementById('china-score').innerText = savedChina;
-                document.getElementById('china-bar').style.width = savedChina + '%';
-            }
-            if (savedUs) {
-                document.getElementById('us-score').innerText = savedUs;
-                document.getElementById('us-bar').style.width = savedUs + '%';
-            }
+            // Set initial domain scorecard
+            const scorecard = document.getElementById('domain-scorecard');
+            scorecard.innerHTML = `
+                <div class="bg-[#1e2937] rounded-2xl p-4">
+                    <div class="text-xs text-slate-400">AGI/Tech</div>
+                    <div class="flex justify-between items-center mt-1">
+                        <div class="text-sm">US Lead</div>
+                        <div class="text-emerald-400 text-xs">+12</div>
+                    </div>
+                </div>
+                <div class="bg-[#1e2937] rounded-2xl p-4">
+                    <div class="text-xs text-slate-400">Drone &amp; Autonomous</div>
+                    <div class="flex justify-between items-center mt-1">
+                        <div class="text-sm">China Lead</div>
+                        <div class="text-red-400 text-xs">-8</div>
+                    </div>
+                </div>
+                <div class="bg-[#1e2937] rounded-2xl p-4">
+                    <div class="text-xs text-slate-400">Energy &amp; Critical Minerals</div>
+                    <div class="flex justify-between items-center mt-1">
+                        <div class="text-sm">China Advantage</div>
+                        <div class="text-red-400 text-xs">-15</div>
+                    </div>
+                </div>
+                <div class="bg-[#1e2937] rounded-2xl p-4">
+                    <div class="text-xs text-slate-400">Maritime Control</div>
+                    <div class="flex justify-between items-center mt-1">
+                        <div class="text-sm">US Lead</div>
+                        <div class="text-emerald-400 text-xs">+9</div>
+                    </div>
+                </div>
+            `;
             
-            document.getElementById('dashboard-current').classList.remove('hidden');
-            document.querySelector('[data-tab="current"]').classList.add('active');
+            // Set initial critical linkages
+            const linkages = document.getElementById('critical-linkages');
+            linkages.innerHTML = `
+                <div class="flex gap-x-3">
+                    <span class="text-emerald-400">01</span>
+                    <span>Drone attacks on energy infrastructure are weakening China's energy resilience, increasing their vulnerability in a Taiwan scenario.</span>
+                </div>
+                <div class="flex gap-x-3">
+                    <span class="text-emerald-400">02</span>
+                    <span>China's advancing Heartland corridors are reducing their Malacca vulnerability, strengthening their overall strategic position.</span>
+                </div>
+                <div class="flex gap-x-3">
+                    <span class="text-emerald-400">03</span>
+                    <span>US political polarization is eroding alliance cohesion, creating openings for Chinese narrative gains in the Global South.</span>
+                </div>
+            `;
             
-            console.log('%c[SBAS v7.0] Final version loaded.', 'color:#64748b');
+            // Set initial forward content
+            document.getElementById('forward-content').innerHTML = `
+                <div>
+                    <div class="text-emerald-400 font-medium mb-1">30 DAYS</div>
+                    <div class="text-sm">Ukraine stalemate continues. SCS gray-zone pressure intensifies. Iran blockade remains active. China continues testing US resolve in the Taiwan Strait.</div>
+                </div>
+                <div>
+                    <div class="text-emerald-400 font-medium mb-1">90 DAYS</div>
+                    <div class="text-sm">Potential Ukraine peace framework or frozen conflict. Larger Chinese maritime exercises expected. AGI capability demonstrations likely from both sides.</div>
+                </div>
+                <div>
+                    <div class="text-emerald-400 font-medium mb-1">180 DAYS</div>
+                    <div class="text-sm">Either negotiated Ukraine settlement or attritional freeze, freeing bandwidth for Indo-Pacific focus. The AGI race is expected to intensify significantly.</div>
+                </div>
+            `;
+            
+            document.getElementById('dashboard-overview').classList.remove('hidden');
+            document.querySelector('[data-tab="overview"]').classList.add('active');
+            
+            console.log('%c[SBAS v8.1] Final refined version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
