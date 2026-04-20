@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v8.1">
-    <title>SBAS v8.1 • Strategic Companion</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v8.2">
+    <title>SBAS v8.2 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -24,11 +24,10 @@
         .dashboard-tab.active { background: #1e2937; color: white; border-radius: 12px; }
         .grok-btn { background: linear-gradient(135deg, #1e5f8a 0%, #3b82f6 100%); }
         .grok-btn:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
+        .updated { animation: updated-pulse 1.8s ease-out; }
+        @keyframes updated-pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
         .node { transition: all 0.2s ease; }
         .node:hover { transform: scale(1.05); }
-        .node.active { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-        .updated-pulse { animation: pulse-update 1.5s ease-out; }
-        @keyframes pulse-update { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
         @media (max-width: 640px) {
             .glass, .modern-card { border-radius: 20px; }
             .text-5xl { font-size: 2.5rem; }
@@ -45,7 +44,7 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.1</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.2</span>
                 </div>
             </div>
             
@@ -86,6 +85,7 @@
             <button onclick="switchDashboard('domains')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="domains">Domain Deep Dives</button>
             <button onclick="switchDashboard('trajectory')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="trajectory">Trajectory</button>
             <button onclick="switchDashboard('risks')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="risks">Vulnerabilities</button>
+            <button onclick="switchDashboard('outcomes')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="outcomes">Conflict Outcomes</button>
             <button onclick="switchDashboard('forward')" class="dashboard-tab px-4 py-2 text-sm font-medium" data-tab="forward">Forward Assessment</button>
         </div>
 
@@ -94,14 +94,13 @@
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">STRATEGIC BALANCE OVERVIEW</div>
                 
-                <!-- Overall Balance -->
                 <div class="glass rounded-3xl p-8 premium-shadow mb-6" id="balance-card">
                     <div class="flex justify-between items-center mb-6">
                         <div>
                             <div class="font-semibold text-2xl">Current Strategic Balance</div>
                             <div class="text-sm text-slate-400">As of 20 April 2026</div>
                         </div>
-                        <div class="px-4 py-2 bg-amber-500/10 text-amber-400 rounded-2xl text-sm font-medium" id="overall-balance-badge">SLIGHTLY TILTED TOWARD CHINA</div>
+                        <div class="px-4 py-2 bg-amber-500/10 text-amber-400 rounded-2xl text-sm font-medium" id="overall-balance">SLIGHTLY TILTED TOWARD CHINA</div>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -131,16 +130,13 @@
                     </div>
                 </div>
 
-                <!-- Domain Balance Scorecard -->
                 <div class="glass rounded-3xl p-8 premium-shadow mb-6">
                     <div class="font-semibold mb-4">Domain Balance Scorecard</div>
-                    
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="domain-scorecard">
                         <!-- Populated dynamically -->
                     </div>
                 </div>
 
-                <!-- Top Critical Linkages -->
                 <div class="glass rounded-3xl p-8 premium-shadow">
                     <div class="font-semibold mb-4">Top Critical Linkages</div>
                     <div class="space-y-3 text-sm" id="critical-linkages">
@@ -156,7 +152,6 @@
                 <div class="section-header mb-4 px-1">DOMAIN DEEP DIVES</div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- AGI Race -->
                     <div class="glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
                         <div class="flex items-center gap-x-3 mb-4">
                             <i class="fa-solid fa-robot text-emerald-400"></i>
@@ -170,7 +165,6 @@
                         </div>
                     </div>
                     
-                    <!-- Drone & Autonomous Warfare -->
                     <div class="glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
                         <div class="flex items-center gap-x-3 mb-4">
                             <i class="fa-solid fa-drone text-purple-400"></i>
@@ -227,6 +221,29 @@
                             </div>
                             <div class="text-sm text-slate-400" id="us-state-detail">The US maintains strategic restraint but faces growing domestic political constraints on alliance cohesion.</div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONFLICT OUTCOMES (NEW) -->
+        <div id="dashboard-outcomes" class="dashboard-content hidden">
+            <div class="mb-6">
+                <div class="section-header mb-4 px-1">CONFLICT OUTCOMES</div>
+                
+                <div class="glass rounded-3xl p-8 premium-shadow">
+                    <div class="mb-6">
+                        <div class="font-semibold mb-3">Select Scenario</div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="loadConflictScenario('taiwan')" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-2xl text-sm transition-colors">Taiwan Strait</button>
+                            <button onclick="loadConflictScenario('ukraine')" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-2xl text-sm transition-colors">Ukraine (Current)</button>
+                            <button onclick="loadConflictScenario('hormuz')" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-2xl text-sm transition-colors">Hormuz Blockade</button>
+                            <button onclick="loadConflictScenario('philippines')" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-2xl text-sm transition-colors">Philippines SCS</button>
+                        </div>
+                    </div>
+                    
+                    <div id="conflict-outcome-content" class="text-sm text-slate-300 leading-relaxed">
+                        Select a scenario above to see Grok's assessment of who currently stands to win and why.
                     </div>
                 </div>
             </div>
@@ -320,53 +337,57 @@
         }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v8.1, an elite first-principles strategic awareness engine and living intelligence system.
+            const prompt = `You are SBAS v8.2, an elite first-principles strategic awareness engine and living intelligence system.
 
-Your sole purpose is to help the user maintain the clearest possible mental model of the US-led West vs China-Russia strategic competition.
+Your purpose is to help the user maintain the clearest possible mental model of the US-led West vs China-Russia strategic competition.
 
-Return your response in this exact structured format:
+Use these strategic frameworks in your analysis: Heartland vs Rimland (Mackinder/Spkyman), Offensive Realism (Mearsheimer), Sea Power (Mahan), and Power Transition Theory.
 
-[SBAS_V8.1_START]
+Prioritize recent leader statements, observable actions, think tank analysis (CSIS, RAND, ISW), and high-signal X accounts (@sentdefender, @WarintheFuture, @Oryxspioenkop).
 
-OVERALL_BALANCE: [1-2 sentence judgment of who currently holds the edge]
+Return in this exact format:
+
+[SBAS_V8.2_START]
+
+OVERALL_BALANCE: [1-2 sentence judgment]
 CHINA_CONFIDENCE: [58-72]
 US_CONFIDENCE: [48-65]
 CHINA_STATE: [Stable / Confident / Overconfident / Desperate]
 US_STATE: [Stable / Confident / Overconfident / Desperate]
 
 TOP_3_LINKAGES:
-1. [How one domain is affecting another]
-2. [How one domain is affecting another]
-3. [How one domain is affecting another]
+1. [Causal linkage]
+2. [Causal linkage]
+3. [Causal linkage]
 
 DOMAIN_SCORECARD:
-- AGI/Tech: [Who is ahead and by how much]
-- Drone & Autonomous: [Who is ahead and by how much]
-- Energy & Critical Minerals: [Who is ahead and by how much]
-- Maritime Control: [Who is ahead and by how much]
-- Land Power (Heartland): [Who is ahead and by how much]
-- Societal Stability: [Who is ahead and by how much]
+- AGI/Tech: [Who leads + margin]
+- Drone & Autonomous: [Who leads + margin]
+- Energy & Critical Minerals: [Who leads + margin]
+- Maritime Control: [Who leads + margin]
+- Land Power (Heartland): [Who leads + margin]
+- Societal Stability: [Who leads + margin]
 
 ===EURASIAN_CHESSBOARD===
-[Rich, high-signal narrative - 4-6 sentences]
+[Rich 5-7 sentence narrative]
 ===END===
 
 ===DRONE_SECTION===
-[Rich, high-signal narrative including battlefield developments, infrastructure attacks, and China-USA race - 5-7 sentences]
+[Rich 6-8 sentence narrative including battlefield, infrastructure attacks, and China-USA race]
 ===END===
 
 ===AGI_RACE===
-[Rich, high-signal narrative - 4-6 sentences]
+[Rich 5-7 sentence narrative]
 ===END===
 
-MOMENTUM_SUMMARY: [1-2 sentence summary of current momentum]
-MOMENTUM_DETAIL: [2-3 sentence explanation]
+MOMENTUM_SUMMARY: [1-2 sentences]
+MOMENTUM_DETAIL: [2-3 sentences]
 
-30_DAY_OUTLOOK: [...]
-90_DAY_OUTLOOK: [...]
-180_DAY_OUTLOOK: [...]
+30_DAY: [Brief]
+90_DAY: [Brief]
+180_DAY: [Brief]
 
-[SBAS_V8.1_END]`;
+[SBAS_V8.2_END]`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
@@ -396,17 +417,16 @@ MOMENTUM_DETAIL: [2-3 sentence explanation]
             
             // Update Overall Balance
             if (overallMatch) {
-                const badge = document.getElementById('overall-balance-badge');
-                badge.innerText = overallMatch[1].trim();
+                document.getElementById('overall-balance').innerText = overallMatch[1].trim();
             }
             
-            // Update Confidence Scores
+            // Update Confidence Scores + Highlight
             if (chinaMatch) {
                 const val = parseInt(chinaMatch[1]);
                 document.getElementById('china-score').innerText = val;
                 document.getElementById('china-bar').style.width = val + '%';
-                document.getElementById('balance-card').classList.add('updated-pulse');
-                setTimeout(() => document.getElementById('balance-card').classList.remove('updated-pulse'), 1500);
+                document.getElementById('balance-card').classList.add('updated');
+                setTimeout(() => document.getElementById('balance-card').classList.remove('updated'), 1800);
             }
             
             if (usMatch) {
@@ -435,7 +455,7 @@ MOMENTUM_DETAIL: [2-3 sentence explanation]
             const now = new Date();
             document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             
-            // Show success toast
+            // Success toast
             const toast = document.createElement('div');
             toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
             toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Dashboard updated with Grok's assessment</span>`;
@@ -443,11 +463,41 @@ MOMENTUM_DETAIL: [2-3 sentence explanation]
             setTimeout(() => { toast.style.transition = 'all 0.4s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 2400);
         }
         
+        function loadConflictScenario(scenario) {
+            const content = document.getElementById('conflict-outcome-content');
+            
+            let html = '';
+            
+            if (scenario === 'taiwan') {
+                html = `<strong>Taiwan Strait Conflict Assessment:</strong><br><br>
+                <strong>Current Assessment:</strong> China currently holds a narrow advantage in a short, high-intensity conflict due to proximity, missile saturation, and growing drone/swarming capabilities. However, the US and allies retain significant advantages in sustained operations, submarine warfare, and long-range precision strike.<br><br>
+                <strong>Key Factors:</strong> US intervention speed, Japanese and Australian involvement, Chinese amphibious lift capacity, and Taiwan's will to resist.<br><br>
+                <strong>Most Likely Outcome:</strong> Costly Chinese victory with heavy losses on both sides, or a frozen conflict if the US intervenes early and decisively.`;
+            } else if (scenario === 'ukraine') {
+                html = `<strong>Ukraine Conflict Assessment (Current):</strong><br><br>
+                <strong>Current Assessment:</strong> Russia holds a marginal advantage in a prolonged war of attrition due to superior industrial output and manpower reserves, but Ukraine retains strong defensive advantages and Western support.<br><br>
+                <strong>Key Factors:</strong> Western long-range weapons supply, Russian economy under sanctions, Ukrainian manpower sustainability, and political will in both Moscow and Kyiv.<br><br>
+                <strong>Most Likely Outcome:</strong> Frozen conflict or negotiated settlement favoring Russia on territory but failing to achieve full strategic objectives.`;
+            } else if (scenario === 'hormuz') {
+                html = `<strong>Hormuz Blockade / Escalation Assessment:</strong><br><br>
+                <strong>Current Assessment:</strong> The United States holds a clear advantage in any direct naval confrontation in the Strait of Hormuz due to superior naval power, air superiority, and alliance support.<br><br>
+                <strong>Key Factors:</strong> Iranian asymmetric capabilities (mines, anti-ship missiles, fast boats), global energy market reaction, and Chinese/Russian diplomatic cover for Iran.<br><br>
+                <strong>Most Likely Outcome:</strong> Short, intense US-Iran naval clash resulting in Iranian defeat but significant global economic disruption.`;
+            } else if (scenario === 'philippines') {
+                html = `<strong>Philippines SCS Scenario Assessment:</strong><br><br>
+                <strong>Current Assessment:</strong> China holds a local advantage in the South China Sea due to proximity, coast guard and maritime militia presence, and island-building infrastructure.<br><br>
+                <strong>Key Factors:</strong> US-Philippines alliance activation, Japanese and Australian involvement, and Chinese willingness to risk direct confrontation with the US.<br><br>
+                <strong>Most Likely Outcome:</strong> Gray-zone escalation favoring China in the short term, with significant risk of miscalculation leading to broader conflict.`;
+            }
+            
+            content.innerHTML = html;
+        }
+        
         function init() {
             initTailwind();
             createConfidenceChart();
             
-            // Set initial domain scorecard
+            // Initial domain scorecard
             const scorecard = document.getElementById('domain-scorecard');
             scorecard.innerHTML = `
                 <div class="bg-[#1e2937] rounded-2xl p-4">
@@ -480,7 +530,7 @@ MOMENTUM_DETAIL: [2-3 sentence explanation]
                 </div>
             `;
             
-            // Set initial critical linkages
+            // Initial critical linkages
             const linkages = document.getElementById('critical-linkages');
             linkages.innerHTML = `
                 <div class="flex gap-x-3">
@@ -497,7 +547,7 @@ MOMENTUM_DETAIL: [2-3 sentence explanation]
                 </div>
             `;
             
-            // Set initial forward content
+            // Initial forward content
             document.getElementById('forward-content').innerHTML = `
                 <div>
                     <div class="text-emerald-400 font-medium mb-1">30 DAYS</div>
@@ -516,7 +566,7 @@ MOMENTUM_DETAIL: [2-3 sentence explanation]
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.1] Final refined version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.2] Final version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
