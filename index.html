@@ -27,12 +27,12 @@
         .grok-btn:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
         .expandable-card { cursor: pointer; }
         .card-narrative { display: none; padding-top: 12px; border-top: 1px solid rgba(148, 163, 184, 0.15); margin-top: 12px; }
-        .metric-row { transition: all 0.2s ease; }
-        .metric-row:hover { background: rgba(148, 163, 184, 0.06); border-radius: 6px; }
         .light-mode .glass { background: rgba(255,255,255,0.95); border: 1px solid #e2e8f0; }
         .light-mode .text-slate-200 { color: #1e2937; }
         .light-mode .text-slate-400 { color: #64748b; }
         .light-mode .section-header { color: #475569; }
+        .chokepoint { transition: all 0.3s ease; }
+        .chokepoint:hover { transform: scale(1.1); }
     </style>
 </head>
 <body class="bg-[#0a0f1a] text-slate-200">
@@ -50,7 +50,6 @@
             </div>
             
             <div class="flex items-center gap-x-2">
-                <!-- Paste Button -->
                 <button onclick="togglePasteArea()" class="px-4 py-2 text-sm font-medium flex items-center gap-x-2 text-slate-300 hover:text-white transition-colors">
                     <i class="fa-solid fa-paste"></i>
                     <span>Paste</span>
@@ -98,9 +97,9 @@
                 <div class="glass rounded-3xl p-6 premium-shadow mb-6">
                     <div class="font-semibold mb-4">Top 3 Things to Watch</div>
                     <div class="space-y-3 text-sm">
-                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">01</span><span>China's shipbuilding momentum continues to accelerate — now at 87, the highest level recorded.</span></div>
-                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">02</span><span>US/Allied confidence remains under pressure (57) due to stretched resources across multiple theaters.</span></div>
-                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">03</span><span>Taiwan tension remains elevated (71) with increased gray-zone activity near the island.</span></div>
+                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">01</span><span>China's shipbuilding momentum is accelerating at record pace (87).</span></div>
+                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">02</span><span>US/Allied confidence remains under sustained pressure (57).</span></div>
+                        <div class="flex gap-x-3"><span class="text-emerald-400 font-mono">03</span><span>Taiwan tension stays elevated (71) with increased gray-zone activity.</span></div>
                     </div>
                 </div>
 
@@ -121,7 +120,6 @@
                                     </div>
                                 </div>
                                 <div class="h-2 bg-white/10 rounded-full"><div id="china-bar" class="h-2 bg-red-500 rounded-full transition-all" style="width:64%"></div></div>
-                                <div class="text-xs text-slate-400 mt-1">58–72 range • Key assumption: No major escalation in next 90 days</div>
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-2">
@@ -132,7 +130,6 @@
                                     </div>
                                 </div>
                                 <div class="h-2 bg-white/10 rounded-full"><div id="us-bar" class="h-2 bg-blue-500 rounded-full transition-all" style="width:57%"></div></div>
-                                <div class="text-xs text-slate-400 mt-1">48–65 range • Key assumption: No major new theater opens</div>
                             </div>
                         </div>
                         <div class="card-narrative text-sm text-slate-300">
@@ -140,16 +137,25 @@
                         </div>
                     </div>
                     
-                    <!-- Energy & Minerals -->
+                    <!-- Energy & Critical Minerals -->
                     <div class="lg:col-span-5 modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
-                        <div class="font-semibold mb-4">Energy &amp; Critical Minerals</div>
+                        <div class="font-semibold mb-4">Top 3 Strategic Chokepoints</div>
                         <div class="space-y-3 text-sm">
-                            <div class="metric-row flex justify-between items-center p-2"><span class="text-slate-400">China Malacca Risk</span><span class="font-mono">72 <span class="text-xs text-amber-400">↑</span></span></div>
-                            <div class="metric-row flex justify-between items-center p-2"><span class="text-slate-400">Russia Shadow Fleet</span><span class="font-mono">64 <span class="text-xs text-red-400">↑</span></span></div>
-                            <div class="metric-row flex justify-between items-center p-2"><span class="text-slate-400">US SPR Level</span><span class="font-mono">81 <span class="text-xs text-emerald-400">→</span></span></div>
+                            <div class="metric-row flex justify-between items-center p-2" onclick="event.stopImmediatePropagation(); toggleSubNarrative(this)">
+                                <span class="text-slate-400">Malacca Strait</span>
+                                <span class="font-mono">72 <span class="text-xs text-red-400">HIGH RISK</span></span>
+                            </div>
+                            <div class="metric-row flex justify-between items-center p-2" onclick="event.stopImmediatePropagation(); toggleSubNarrative(this)">
+                                <span class="text-slate-400">Hormuz Strait</span>
+                                <span class="font-mono">68 <span class="text-xs text-amber-400">ELEVATED</span></span>
+                            </div>
+                            <div class="metric-row flex justify-between items-center p-2" onclick="event.stopImmediatePropagation(); toggleSubNarrative(this)">
+                                <span class="text-slate-400">Taiwan Strait</span>
+                                <span class="font-mono">71 <span class="text-xs text-red-400">HIGH RISK</span></span>
+                            </div>
                         </div>
                         <div class="card-narrative text-sm text-slate-300">
-                            China remains highly vulnerable to Malacca chokepoint disruption. Russia continues to effectively use its shadow fleet despite sanctions.
+                            These three chokepoints represent the most critical pressure points in the current strategic competition. Control or disruption of any one would significantly alter the balance of power.
                         </div>
                     </div>
                 </div>
@@ -186,20 +192,26 @@
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">VULNERABILITIES</div>
                 
-                <div class="glass rounded-3xl p-8 premium-shadow mb-6">
+                <div class="glass rounded-3xl p-8 premium-shadow mb-6 expandable-card" onclick="toggleCard(this)">
                     <div class="font-semibold mb-4">Top Fragile Points</div>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center"><span>Malacca Chokepoint (China)</span><span class="px-3 py-1 bg-red-500/10 text-red-400 text-xs rounded-xl">HIGH</span></div>
                         <div class="flex justify-between items-center"><span>US Political Polarization</span><span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-xl">ELEVATED</span></div>
                         <div class="flex justify-between items-center"><span>Russia War Fatigue</span><span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-xl">ELEVATED</span></div>
                     </div>
+                    <div class="card-narrative text-sm text-slate-300">
+                        These three areas represent the most significant structural vulnerabilities for each side. Any major disruption here would have outsized strategic consequences.
+                    </div>
                 </div>
                 
-                <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                <div class="modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
                     <div class="font-semibold mb-4">Assumption Sensitivity</div>
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between"><span class="text-slate-400">"No major escalation in 90 days"</span><span class="font-mono">High Impact</span></div>
                         <div class="flex justify-between"><span class="text-slate-400">"China won't invade before 2028"</span><span class="font-mono">Medium Impact</span></div>
+                    </div>
+                    <div class="card-narrative text-sm text-slate-300">
+                        These assumptions underpin much of the current assessment. If either proves incorrect, the strategic picture would change dramatically.
                     </div>
                 </div>
             </div>
@@ -211,12 +223,15 @@
                 <div class="section-header mb-4 px-1">STRATEGIC OUTLOOK</div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="modern-card glass rounded-3xl p-8 premium-shadow">
+                    <div class="modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
                         <div class="font-semibold mb-4">Global Position</div>
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between"><span class="text-slate-400">Alliances &amp; Global South</span><span class="font-mono">71</span></div>
                             <div class="flex justify-between"><span class="text-slate-400">Narrative Competition</span><span class="font-mono">58</span></div>
                             <div class="flex justify-between"><span class="text-slate-400">Cyber &amp; Space</span><span class="font-mono">67</span></div>
+                        </div>
+                        <div class="card-narrative text-sm text-slate-300">
+                            China continues to make steady gains in the Global South narrative space, while the US maintains strong formal alliances but struggles with perception in the developing world.
                         </div>
                     </div>
                     
@@ -224,6 +239,50 @@
                         <div class="font-semibold mb-4">Your Bias Profile</div>
                         <div class="text-sm text-slate-300">You've adjusted China scores upward 6 times in the last 8 assessments. Consider reviewing your assumptions on Chinese restraint.</div>
                     </div>
+                </div>
+                
+                <!-- Global Chokepoint Overview -->
+                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
+                    <div class="font-semibold mb-4">Global Chokepoint Overview</div>
+                    <svg width="100%" height="220" viewBox="0 0 800 220" class="mx-auto">
+                        <!-- Background -->
+                        <rect width="800" height="220" fill="#1e2937" rx="12"/>
+                        
+                        <!-- Major Chokepoints -->
+                        <!-- Malacca -->
+                        <circle cx="320" cy="140" r="8" fill="#ef4444" class="chokepoint"/>
+                        <text x="320" y="165" text-anchor="middle" fill="#94a3b8" font-size="11">Malacca</text>
+                        <text x="320" y="178" text-anchor="middle" fill="#ef4444" font-size="9">HIGH RISK</text>
+                        
+                        <!-- Hormuz -->
+                        <circle cx="420" cy="120" r="8" fill="#f59e0b" class="chokepoint"/>
+                        <text x="420" y="145" text-anchor="middle" fill="#94a3b8" font-size="11">Hormuz</text>
+                        <text x="420" y="158" text-anchor="middle" fill="#f59e0b" font-size="9">ELEVATED</text>
+                        
+                        <!-- Taiwan Strait -->
+                        <circle cx="580" cy="100" r="8" fill="#ef4444" class="chokepoint"/>
+                        <text x="580" y="125" text-anchor="middle" fill="#94a3b8" font-size="11">Taiwan Strait</text>
+                        <text x="580" y="138" text-anchor="middle" fill="#ef4444" font-size="9">HIGH RISK</text>
+                        
+                        <!-- Suez -->
+                        <circle cx="480" cy="85" r="6" fill="#10b981" class="chokepoint"/>
+                        <text x="480" y="105" text-anchor="middle" fill="#94a3b8" font-size="10">Suez</text>
+                        
+                        <!-- Panama -->
+                        <circle cx="200" cy="130" r="6" fill="#10b981" class="chokepoint"/>
+                        <text x="200" y="150" text-anchor="middle" fill="#94a3b8" font-size="10">Panama</text>
+                        
+                        <!-- Legend -->
+                        <rect x="650" y="30" width="130" height="80" rx="6" fill="#334155"/>
+                        <text x="715" y="50" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="600">Status</text>
+                        <circle cx="665" cy="68" r="5" fill="#ef4444"/>
+                        <text x="680" y="72" fill="#e2e8f0" font-size="10">High Risk</text>
+                        <circle cx="665" cy="85" r="5" fill="#f59e0b"/>
+                        <text x="680" y="89" fill="#e2e8f0" font-size="10">Elevated</text>
+                        <circle cx="665" cy="102" r="5" fill="#10b981"/>
+                        <text x="680" y="106" fill="#e2e8f0" font-size="10">Stable</text>
+                    </svg>
+                    <div class="text-xs text-slate-400 text-center mt-2">Major strategic chokepoints and current control status</div>
                 </div>
             </div>
         </div>
@@ -303,6 +362,21 @@
             }
         }
         
+        function toggleSubNarrative(element) {
+            event.stopImmediatePropagation();
+            const parent = element.parentElement;
+            let narrative = parent.querySelector('.sub-narrative');
+            
+            if (!narrative) {
+                narrative = document.createElement('div');
+                narrative.className = 'sub-narrative text-xs text-slate-400 mt-2 pl-2 border-l-2 border-slate-600';
+                narrative.innerHTML = 'This chokepoint represents a critical vulnerability for China. Control or disruption here would have outsized strategic consequences.';
+                parent.appendChild(narrative);
+            } else {
+                narrative.style.display = narrative.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+        
         function togglePasteArea() {
             const pasteArea = document.getElementById('paste-area');
             pasteArea.classList.toggle('hidden');
@@ -319,8 +393,72 @@
         }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v7.0, an elite first-principles strategic awareness engine and long-term strategic companion... [full optimized prompt as before]`;
-            
+            const prompt = `You are SBAS v7.0, an elite first-principles strategic awareness engine and long-term strategic companion. Your sole purpose is to help the user develop and maintain the clearest possible understanding of the strategic environment between the US-led West and the China-Russia axis over time.
+
+You operate with perfect symmetry, zero priors, ruthless objectivity, and maximum signal density. You think in grand strategic terms and surface the factors that actually move the needle on war risk and long-term advantage.
+
+**Current Date:** 19 April 2026
+
+**Structured Historical Scoring (Last 8 Assessments)**
+| Date       | China | US/Allied | Overall Risk | China Shipbuilding | Taiwan Tension | Energy Malacca | Social Stability China |
+|------------|-------|-----------|--------------|--------------------|----------------|---------------|------------------------|
+| 19 Apr     | 64    | 57        | Elevated     | 87                 | 71             | 72            | 71                     |
+| 12 Apr     | 61    | 59        | Elevated     | 84                 | 68             | 69            | 69                     |
+| 5 Apr      | 58    | 62        | Elevated     | 81                 | 65             | 71            | 67                     |
+| 29 Mar     | 55    | 64        | Low-Elevated | 78                 | 63             | 68            | 65                     |
+| 22 Mar     | 52    | 66        | Low          | 75                 | 61             | 70            | 63                     |
+| 15 Mar     | 50    | 67        | Low          | 73                 | 59             | 67            | 62                     |
+| 8 Mar      | 48    | 68        | Low          | 71                 | 58             | 69            | 61                     |
+| 1 Mar      | 46    | 69        | Low          | 69                 | 56             | 66            | 60                     |
+
+**Your Role as Companion**
+You are not just providing one-off assessments. You are helping the user build a living, evolving understanding of the strategic environment. Use the historical scoring table above to identify patterns, momentum shifts, trajectory changes, and recurring themes. Be honest about whether previous assessments appear to have been too optimistic or pessimistic.
+
+**Core Objective**
+Provide clear, high-signal awareness of:
+- How the West is currently performing against the China-Russia axis across all relevant domains
+- How close we are to major war, proxied by both sides’ confidence in achieving acceptable kinetic outcomes
+- Strategic preparation, positioning, and escalation dynamics
+- The state of play across chokepoints, energy, critical minerals, alliances, technological competition, societal stability, and game-theoretic dynamics
+
+**Analysis Requirements (Maintain Full Depth)**
+1. Multi-Domain Strategic Reality Engine
+   - Current Operational Picture
+   - Cross-Domain Analysis (Maritime, Eurasian Land Power vs Rimland, Economic Architecture, Critical Minerals & Energy, Alliances & Global South, Tech & AI, Narrative & Influence, Societal Stability & Internal Resilience, Game-Theoretic Dynamics)
+
+2. War Proximity & Strategic Confidence Dashboard
+   - China’s estimated confidence (range + most likely) with 3-sentence rationale and key assumption sensitivity
+   - US/Allied estimated confidence (range + most likely) with 3-sentence rationale and key assumption sensitivity
+   - Overall risk of major power war (next 6–12 months)
+   - Top 3 factors pushing escalation
+   - Top 3 factors restraining escalation
+   - Key Uncertainties
+   - Malacca Dilemma & Energy Resilience Status
+
+3. Grand Strategic Architecture & Systemic Interactions
+   - Eurasian Chessboard Status
+   - Rimland vs Heartland Balance
+   - Energy Resilience & Vulnerability Assessment
+   - Key Systemic Interactions (including second- and third-order effects)
+   - Top Systemic Risks
+   - Western Hemisphere Check
+
+4. Societal Stability & Internal Resilience Assessment
+   - Full assessment for China, Russia, and US/Allied coalition
+
+5. Active Theater Trackers
+   - Concise status updates with attention to how societal stability affects theater sustainability
+
+6. Forward Assessment
+   - Most important assumption that would change the picture if violated
+   - 30/90/180-day outlook
+   - Key deltas since last assessment
+
+**Output Instructions**
+Return your response using clear section headers matching the structure above. Be precise, objective, and maximally signal-dense. Use ranges where appropriate and explicitly note key assumption sensitivities. Maintain full strategic depth — do not simplify or dumb down your analysis.
+
+**SBAS v7.0 — First-Principles | Symmetric Rigor | Maximum Signal Density | Long-term Strategic Companion**`;
+
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
             link.href = grokUrl;
