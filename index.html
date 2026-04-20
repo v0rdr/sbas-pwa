@@ -34,6 +34,11 @@
         .node-card { transition: all 0.2s ease; }
         .node-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2); }
         .node-card.active { border: 2px solid #3b82f6; }
+        @media (max-width: 640px) {
+            .section-header { font-size: 9px; }
+            .glass { border-radius: 20px; }
+            .modern-card { border-radius: 20px; }
+        }
     </style>
 </head>
 <body class="bg-[#0a0f1a] text-slate-200">
@@ -298,14 +303,15 @@
                     </div>
                 </div>
                 
-                <!-- Eurasian Chessboard -->
+                <!-- Eurasian Chessboard (Expanded Narrative) -->
                 <div class="glass rounded-3xl p-8 premium-shadow mt-6">
                     <div class="flex items-center gap-x-3 mb-4">
                         <i class="fa-solid fa-globe text-blue-400"></i>
                         <div class="font-semibold">Eurasian Chessboard</div>
                     </div>
-                    <div class="text-sm text-slate-300">
-                        Russia maintains localized initiative in Ukraine but faces increasing Ukrainian counterattacks. China continues advancing Heartland infrastructure while the US-led Rimland coalition strengthens maritime denial capabilities.
+                    <div class="text-sm text-slate-300 leading-relaxed">
+                        Russia maintains localized initiative in Ukraine but faces increasing Ukrainian counterattacks supported by Western long-range systems. The war has settled into a brutal war of attrition where Russian industrial output currently outpaces Ukrainian losses, though manpower constraints are becoming acute.<br><br>
+                        China continues advancing Heartland infrastructure at pace, with the China-Pakistan Economic Corridor and new Central Asian rail links progressing steadily. Meanwhile, the US-led Rimland coalition is strengthening maritime denial capabilities across the First Island Chain, with increased rotational deployments and new basing agreements in the Philippines and Papua New Guinea.
                     </div>
                 </div>
                 
@@ -325,7 +331,7 @@
                                     <span class="text-xs text-teal-400">90%</span>
                                 </div>
                             </div>
-                            <div class="text-xs text-slate-400">China is actively pursuing a Heartland strategy through BRI land corridors while challenging Rimland control at key chokepoints.</div>
+                            <div class="text-xs text-slate-400">China is actively pursuing a Heartland strategy through BRI land corridors while challenging Rimland control at key chokepoints. The US is responding with strengthened maritime denial and alliance deepening.</div>
                         </div>
                         
                         <div>
@@ -339,7 +345,7 @@
                                     <span class="text-xs text-red-400">75%</span>
                                 </div>
                             </div>
-                            <div class="text-xs text-slate-400">Great power competition is intensifying as China seeks regional hegemony in East Asia, consistent with offensive realist predictions.</div>
+                            <div class="text-xs text-slate-400">Great power competition is intensifying as China seeks regional hegemony in East Asia, consistent with offensive realist predictions. The US is acting as the offshore balancer, attempting to prevent any single power from dominating the region.</div>
                         </div>
                         
                         <div>
@@ -353,7 +359,7 @@
                                     <span class="text-xs text-blue-400">65%</span>
                                 </div>
                             </div>
-                            <div class="text-xs text-slate-400">The US continues to rely on Mahanian sea power and chokepoint control, while China is hedging with both maritime and overland strategies.</div>
+                            <div class="text-xs text-slate-400">The US continues to rely on Mahanian sea power and chokepoint control, while China is hedging with both maritime and overland strategies. This creates a classic land power vs sea power dynamic.</div>
                         </div>
                     </div>
                 </div>
@@ -598,38 +604,34 @@
         }
         
         function highlightNode(nodeId) {
-            // Remove active class from all nodes
             document.querySelectorAll('.node-card').forEach(el => el.classList.remove('active'));
             
-            // Add active class to clicked node
             const node = document.getElementById('node-' + nodeId);
             if (node) {
                 node.classList.add('active');
                 
-                // Show related information
                 let message = '';
                 switch(nodeId) {
                     case 'malacca':
-                        message = 'Malacca Strait is the most critical chokepoint for China. Disruption here would severely impact Chinese energy imports.';
+                        message = 'Malacca Strait is the most critical chokepoint for China. Disruption here would severely impact Chinese energy imports and force reliance on overland alternatives.';
                         break;
                     case 'taiwan':
-                        message = 'Taiwan Strait remains the highest-risk flashpoint. Any escalation here would likely trigger full US intervention.';
+                        message = 'Taiwan Strait remains the highest-risk flashpoint. Any escalation here would likely trigger full US intervention and fundamentally alter the strategic balance.';
                         break;
                     case 'hormuz':
-                        message = 'Hormuz Strait is currently under US blockade. This is the most active point of US-Iran tension.';
+                        message = 'Hormuz Strait is currently under US blockade. This is the most active point of US-Iran tension and directly impacts global energy markets.';
                         break;
                     case 'cpec':
-                        message = 'CPEC (China-Pakistan Economic Corridor) is China\'s most advanced overland bypass to Malacca.';
+                        message = 'CPEC (China-Pakistan Economic Corridor) is China\'s most advanced overland bypass to Malacca, providing direct access to the Indian Ocean.';
                         break;
                     case 'russia':
-                        message = 'Russia-China energy pipelines are the backbone of China\'s Heartland energy security strategy.';
+                        message = 'Russia-China energy pipelines are the backbone of China\'s Heartland energy security strategy, reducing dependence on vulnerable sea lanes.';
                         break;
                     case 'myanmar':
-                        message = 'Myanmar Corridor provides China with direct Indian Ocean access, reducing Malacca dependency.';
+                        message = 'Myanmar Corridor provides China with direct Indian Ocean access, significantly reducing Malacca dependency for energy imports.';
                         break;
                 }
                 
-                // Show toast with information
                 const toast = document.createElement('div');
                 toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-slate-800 text-slate-200 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100] max-w-md text-center';
                 toast.innerHTML = message;
@@ -639,7 +641,7 @@
                     toast.style.transition = 'all 0.4s ease';
                     toast.style.opacity = '0';
                     setTimeout(() => toast.remove(), 400);
-                }, 3500);
+                }, 3800);
             }
         }
         
@@ -658,7 +660,6 @@
             const currentChina = parseInt(document.getElementById('china-score').innerText);
             const currentUs = parseInt(document.getElementById('us-score').innerText);
             
-            // Simulate previous assessment (in real app this would come from storage)
             const prevChina = currentChina - 3;
             const prevUs = currentUs + 2;
             
@@ -739,8 +740,7 @@
             document.getElementById('dashboard-current').classList.remove('hidden');
             document.querySelector('[data-tab="current"]').classList.add('active');
             
-            // Make diagram nodes clickable by default
-            console.log('%c[SBAS v7.0] Complete final version with all improvements loaded.', 'color:#64748b');
+            console.log('%c[SBAS v7.0] Final polished version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
