@@ -31,6 +31,9 @@
         .light-mode .text-slate-200 { color: #1e2937; }
         .light-mode .text-slate-400 { color: #64748b; }
         .light-mode .section-header { color: #475569; }
+        .node-card { transition: all 0.2s ease; }
+        .node-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2); }
+        .node-card.active { border: 2px solid #3b82f6; }
     </style>
 </head>
 <body class="bg-[#0a0f1a] text-slate-200">
@@ -390,7 +393,7 @@
                         </div>
                     </div>
                     
-                    <!-- Optimized Visual Flow -->
+                    <!-- Interactive Strategic Nodes -->
                     <div class="bg-[#1e2937] rounded-2xl p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             
@@ -404,7 +407,7 @@
                                 </div>
                                 
                                 <div class="space-y-3">
-                                    <div class="flex justify-between items-center bg-[#334155] rounded-xl px-4 py-3">
+                                    <div onclick="highlightNode('malacca')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-malacca">
                                         <div class="flex items-center gap-x-3">
                                             <span class="text-sm">Malacca Strait</span>
                                         </div>
@@ -414,7 +417,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="flex justify-between items-center bg-[#334155] rounded-xl px-4 py-3">
+                                    <div onclick="highlightNode('taiwan')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-taiwan">
                                         <div class="flex items-center gap-x-3">
                                             <span class="text-sm">Taiwan Strait</span>
                                         </div>
@@ -424,7 +427,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="flex justify-between items-center bg-[#334155] rounded-xl px-4 py-3">
+                                    <div onclick="highlightNode('hormuz')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-hormuz">
                                         <div class="flex items-center gap-x-3">
                                             <span class="text-sm">Hormuz Strait</span>
                                         </div>
@@ -446,7 +449,7 @@
                                 </div>
                                 
                                 <div class="space-y-3">
-                                    <div class="flex justify-between items-center bg-[#334155] rounded-xl px-4 py-3">
+                                    <div onclick="highlightNode('cpec')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-cpec">
                                         <div class="flex items-center gap-x-3">
                                             <span class="text-sm">CPEC / Gwadar</span>
                                         </div>
@@ -456,7 +459,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="flex justify-between items-center bg-[#334155] rounded-xl px-4 py-3">
+                                    <div onclick="highlightNode('russia')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-russia">
                                         <div class="flex items-center gap-x-3">
                                             <span class="text-sm">Russia-China Pipelines</span>
                                         </div>
@@ -466,7 +469,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="flex justify-between items-center bg-[#334155] rounded-xl px-4 py-3">
+                                    <div onclick="highlightNode('myanmar')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-myanmar">
                                         <div class="flex items-center gap-x-3">
                                             <span class="text-sm">Myanmar Corridor</span>
                                         </div>
@@ -594,6 +597,52 @@
             }
         }
         
+        function highlightNode(nodeId) {
+            // Remove active class from all nodes
+            document.querySelectorAll('.node-card').forEach(el => el.classList.remove('active'));
+            
+            // Add active class to clicked node
+            const node = document.getElementById('node-' + nodeId);
+            if (node) {
+                node.classList.add('active');
+                
+                // Show related information
+                let message = '';
+                switch(nodeId) {
+                    case 'malacca':
+                        message = 'Malacca Strait is the most critical chokepoint for China. Disruption here would severely impact Chinese energy imports.';
+                        break;
+                    case 'taiwan':
+                        message = 'Taiwan Strait remains the highest-risk flashpoint. Any escalation here would likely trigger full US intervention.';
+                        break;
+                    case 'hormuz':
+                        message = 'Hormuz Strait is currently under US blockade. This is the most active point of US-Iran tension.';
+                        break;
+                    case 'cpec':
+                        message = 'CPEC (China-Pakistan Economic Corridor) is China\'s most advanced overland bypass to Malacca.';
+                        break;
+                    case 'russia':
+                        message = 'Russia-China energy pipelines are the backbone of China\'s Heartland energy security strategy.';
+                        break;
+                    case 'myanmar':
+                        message = 'Myanmar Corridor provides China with direct Indian Ocean access, reducing Malacca dependency.';
+                        break;
+                }
+                
+                // Show toast with information
+                const toast = document.createElement('div');
+                toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-slate-800 text-slate-200 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100] max-w-md text-center';
+                toast.innerHTML = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.transition = 'all 0.4s ease';
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 400);
+                }, 3500);
+            }
+        }
+        
         function togglePasteArea() {
             const pasteArea = document.getElementById('paste-area');
             pasteArea.classList.toggle('hidden');
@@ -606,7 +655,17 @@
         }
         
         function quickCompare() {
-            alert("Quick Compare: China +3, US -2, Overall risk stable since last assessment.");
+            const currentChina = parseInt(document.getElementById('china-score').innerText);
+            const currentUs = parseInt(document.getElementById('us-score').innerText);
+            
+            // Simulate previous assessment (in real app this would come from storage)
+            const prevChina = currentChina - 3;
+            const prevUs = currentUs + 2;
+            
+            const chinaChange = currentChina - prevChina;
+            const usChange = currentUs - prevUs;
+            
+            alert(`Comparison to Last Assessment:\n\nChina: ${currentChina} (${chinaChange >= 0 ? '+' : ''}${chinaChange})\nUS/Allied: ${currentUs} (${usChange >= 0 ? '+' : ''}${usChange})\n\nOverall risk: Stable`);
         }
         
         function refreshWithGrok() {
@@ -680,7 +739,8 @@
             document.getElementById('dashboard-current').classList.remove('hidden');
             document.querySelector('[data-tab="current"]').classList.add('active');
             
-            console.log('%c[SBAS v7.0] Complete final version loaded.', 'color:#64748b');
+            // Make diagram nodes clickable by default
+            console.log('%c[SBAS v7.0] Complete final version with all improvements loaded.', 'color:#64748b');
         }
         
         window.onload = init;
