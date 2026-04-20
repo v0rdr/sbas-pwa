@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v8.5">
-    <title>SBAS v8.5 • Strategic Companion</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v8.6">
+    <title>SBAS v8.6 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.5</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.6</span>
                 </div>
             </div>
             
@@ -402,7 +402,7 @@
         }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v8.5, an elite first-principles strategic awareness engine and living intelligence system.
+            const prompt = `You are SBAS v8.6, an elite first-principles strategic awareness engine and living intelligence system.
 
 Your purpose is to help the user maintain the clearest possible mental model of the multi-polar great power competition (US, China, Russia, EU).
 
@@ -412,7 +412,7 @@ Prioritize recent leader statements, observable actions, think tank analysis (CS
 
 Return in this exact format:
 
-[SBAS_V8.5_START]
+[SBAS_V8.6_START]
 
 OVERALL_BALANCE: [1-2 sentence judgment]
 CHINA_CONFIDENCE: [58-72]
@@ -459,7 +459,7 @@ MOMENTUM_DETAIL: [2-3 sentences]
 90_DAY: [Brief]
 180_DAY: [Brief]
 
-[SBAS_V8.5_END]`;
+[SBAS_V8.6_END]`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
@@ -478,21 +478,20 @@ MOMENTUM_DETAIL: [2-3 sentences]
                 return;
             }
             
-            const overallMatch = text.match(/OVERALL_BALANCE:\s*(.+)/i);
+            // More robust parsing
+            const overallMatch = text.match(/OVERALL_BALANCE:\s*(.+?)(?=\n|$)/i);
             const chinaMatch = text.match(/CHINA_CONFIDENCE:\s*(\d+)/i);
             const usMatch = text.match(/US_CONFIDENCE:\s*(\d+)/i);
-            const chinaStateMatch = text.match(/CHINA_STATE:\s*(.+)/i);
-            const usStateMatch = text.match(/US_STATE:\s*(.+)/i);
-            const momentumMatch = text.match(/MOMENTUM_SUMMARY:\s*(.+)/i);
-            const momentumDetailMatch = text.match(/MOMENTUM_DETAIL:\s*(.+)/i);
-            const thirtyDayMatch = text.match(/30_DAY:\s*(.+)/i);
-            const ninetyDayMatch = text.match(/90_DAY:\s*(.+)/i);
-            const oneEightyDayMatch = text.match(/180_DAY:\s*(.+)/i);
+            const chinaStateMatch = text.match(/CHINA_STATE:\s*(.+?)(?=\n|$)/i);
+            const usStateMatch = text.match(/US_STATE:\s*(.+?)(?=\n|$)/i);
+            const momentumMatch = text.match(/MOMENTUM_SUMMARY:\s*(.+?)(?=\n|$)/i);
+            const momentumDetailMatch = text.match(/MOMENTUM_DETAIL:\s*(.+?)(?=\n|$)/i);
+            const thirtyDayMatch = text.match(/30_DAY:\s*(.+?)(?=\n|$)/i);
+            const ninetyDayMatch = text.match(/90_DAY:\s*(.+?)(?=\n|$)/i);
+            const oneEightyDayMatch = text.match(/180_DAY:\s*(.+?)(?=\n|$)/i);
             
-            // Update Strategic Balance (non-destructive)
-            if (overallMatch) {
-                document.getElementById('overall-balance').innerText = overallMatch[1].trim();
-            }
+            // Update Strategic Balance
+            if (overallMatch) document.getElementById('overall-balance').innerText = overallMatch[1].trim();
             if (chinaMatch) {
                 const val = parseInt(chinaMatch[1]);
                 document.getElementById('china-score').innerText = val;
@@ -503,18 +502,10 @@ MOMENTUM_DETAIL: [2-3 sentences]
                 document.getElementById('us-score').innerText = val;
                 document.getElementById('us-bar').style.width = val + '%';
             }
-            if (chinaStateMatch) {
-                document.getElementById('china-state').innerText = chinaStateMatch[1].trim();
-            }
-            if (usStateMatch) {
-                document.getElementById('us-state').innerText = usStateMatch[1].trim();
-            }
-            if (momentumMatch) {
-                document.getElementById('momentum-summary').innerHTML = momentumMatch[1].trim();
-            }
-            if (momentumDetailMatch) {
-                document.getElementById('momentum-detail').innerText = momentumDetailMatch[1].trim();
-            }
+            if (chinaStateMatch) document.getElementById('china-state').innerText = chinaStateMatch[1].trim();
+            if (usStateMatch) document.getElementById('us-state').innerText = usStateMatch[1].trim();
+            if (momentumMatch) document.getElementById('momentum-summary').innerHTML = momentumMatch[1].trim();
+            if (momentumDetailMatch) document.getElementById('momentum-detail').innerText = momentumDetailMatch[1].trim();
             
             // Update Forward Assessment
             const forwardDiv = document.getElementById('forward-content');
@@ -569,6 +560,7 @@ MOMENTUM_DETAIL: [2-3 sentences]
             initTailwind();
             createRadarChart();
             createMomentumChart();
+            createLinkageNetwork();
             
             const scorecard = document.getElementById('domain-scorecard');
             scorecard.innerHTML = `
@@ -640,7 +632,7 @@ MOMENTUM_DETAIL: [2-3 sentences]
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.5] Final fixed version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.6] Final version loaded with robust parser and full visualizations.', 'color:#64748b');
         }
         
         window.onload = init;
