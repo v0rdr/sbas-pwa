@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v8.2">
-    <title>SBAS v8.2 • Strategic Companion</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v8.3">
+    <title>SBAS v8.3 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -28,6 +28,7 @@
         @keyframes updated-pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
         .node { transition: all 0.2s ease; }
         .node:hover { transform: scale(1.05); }
+        .linkage { transition: all 0.2s ease; }
         @media (max-width: 640px) {
             .glass, .modern-card { border-radius: 20px; }
             .text-5xl { font-size: 2.5rem; }
@@ -44,7 +45,7 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.2</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.3</span>
                 </div>
             </div>
             
@@ -71,7 +72,7 @@
         <div class="flex items-end justify-between mb-8">
             <div>
                 <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Companion</h1>
-                <p class="text-lg text-slate-400 mt-1">US-Led West vs China-Russia Axis • Living Intelligence System</p>
+                <p class="text-lg text-slate-400 mt-1">US • China • Russia • EU • Living Intelligence System</p>
             </div>
             <div class="text-right hidden md:block">
                 <div class="text-xs text-slate-500">LAST UPDATED</div>
@@ -226,7 +227,7 @@
             </div>
         </div>
 
-        <!-- CONFLICT OUTCOMES (NEW) -->
+        <!-- CONFLICT OUTCOMES -->
         <div id="dashboard-outcomes" class="dashboard-content hidden">
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">CONFLICT OUTCOMES</div>
@@ -337,28 +338,34 @@
         }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v8.2, an elite first-principles strategic awareness engine and living intelligence system.
+            const prompt = `You are SBAS v8.3, an elite first-principles strategic awareness engine and living intelligence system.
 
-Your purpose is to help the user maintain the clearest possible mental model of the US-led West vs China-Russia strategic competition.
+Your purpose is to help the user maintain the clearest possible mental model of the multi-polar great power competition (US, China, Russia, EU).
 
-Use these strategic frameworks in your analysis: Heartland vs Rimland (Mackinder/Spkyman), Offensive Realism (Mearsheimer), Sea Power (Mahan), and Power Transition Theory.
+Use these strategic frameworks: Heartland vs Rimland, Offensive Realism, Sea Power (Mahan), and Power Transition Theory.
 
 Prioritize recent leader statements, observable actions, think tank analysis (CSIS, RAND, ISW), and high-signal X accounts (@sentdefender, @WarintheFuture, @Oryxspioenkop).
 
 Return in this exact format:
 
-[SBAS_V8.2_START]
+[SBAS_V8.3_START]
 
 OVERALL_BALANCE: [1-2 sentence judgment]
 CHINA_CONFIDENCE: [58-72]
 US_CONFIDENCE: [48-65]
+RUSSIA_CONFIDENCE: [45-70]
+EU_CONFIDENCE: [40-65]
+
 CHINA_STATE: [Stable / Confident / Overconfident / Desperate]
 US_STATE: [Stable / Confident / Overconfident / Desperate]
+RUSSIA_STATE: [Stable / Confident / Overconfident / Desperate]
+EU_STATE: [Stable / Confident / Overconfident / Desperate]
 
-TOP_3_LINKAGES:
+TOP_4_LINKAGES:
 1. [Causal linkage]
 2. [Causal linkage]
 3. [Causal linkage]
+4. [Causal linkage]
 
 DOMAIN_SCORECARD:
 - AGI/Tech: [Who leads + margin]
@@ -367,17 +374,18 @@ DOMAIN_SCORECARD:
 - Maritime Control: [Who leads + margin]
 - Land Power (Heartland): [Who leads + margin]
 - Societal Stability: [Who leads + margin]
+- EU Political Cohesion: [Who leads + margin]
 
 ===EURASIAN_CHESSBOARD===
-[Rich 5-7 sentence narrative]
+[Rich 6-8 sentence narrative]
 ===END===
 
 ===DRONE_SECTION===
-[Rich 6-8 sentence narrative including battlefield, infrastructure attacks, and China-USA race]
+[Rich 7-9 sentence narrative including battlefield, infrastructure attacks, and China-USA-Russia dynamics]
 ===END===
 
 ===AGI_RACE===
-[Rich 5-7 sentence narrative]
+[Rich 6-8 sentence narrative]
 ===END===
 
 MOMENTUM_SUMMARY: [1-2 sentences]
@@ -387,7 +395,7 @@ MOMENTUM_DETAIL: [2-3 sentences]
 90_DAY: [Brief]
 180_DAY: [Brief]
 
-[SBAS_V8.2_END]`;
+[SBAS_V8.3_END]`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
@@ -406,21 +414,20 @@ MOMENTUM_DETAIL: [2-3 sentences]
                 return;
             }
             
-            // Parse key fields
             const overallMatch = text.match(/OVERALL_BALANCE:\s*(.+)/i);
             const chinaMatch = text.match(/CHINA_CONFIDENCE:\s*(\d+)/i);
             const usMatch = text.match(/US_CONFIDENCE:\s*(\d+)/i);
+            const russiaMatch = text.match(/RUSSIA_CONFIDENCE:\s*(\d+)/i);
+            const euMatch = text.match(/EU_CONFIDENCE:\s*(\d+)/i);
             const chinaStateMatch = text.match(/CHINA_STATE:\s*(.+)/i);
             const usStateMatch = text.match(/US_STATE:\s*(.+)/i);
             const momentumMatch = text.match(/MOMENTUM_SUMMARY:\s*(.+)/i);
             const momentumDetailMatch = text.match(/MOMENTUM_DETAIL:\s*(.+)/i);
             
-            // Update Overall Balance
             if (overallMatch) {
                 document.getElementById('overall-balance').innerText = overallMatch[1].trim();
             }
             
-            // Update Confidence Scores + Highlight
             if (chinaMatch) {
                 const val = parseInt(chinaMatch[1]);
                 document.getElementById('china-score').innerText = val;
@@ -435,7 +442,6 @@ MOMENTUM_DETAIL: [2-3 sentences]
                 document.getElementById('us-bar').style.width = val + '%';
             }
             
-            // Update Strategic States
             if (chinaStateMatch) {
                 document.getElementById('china-state').innerText = chinaStateMatch[1].trim();
             }
@@ -443,7 +449,6 @@ MOMENTUM_DETAIL: [2-3 sentences]
                 document.getElementById('us-state').innerText = usStateMatch[1].trim();
             }
             
-            // Update Momentum
             if (momentumMatch) {
                 document.getElementById('momentum-summary').innerHTML = momentumMatch[1].trim();
             }
@@ -451,11 +456,9 @@ MOMENTUM_DETAIL: [2-3 sentences]
                 document.getElementById('momentum-detail').innerText = momentumDetailMatch[1].trim();
             }
             
-            // Update timestamp
             const now = new Date();
             document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             
-            // Success toast
             const toast = document.createElement('div');
             toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
             toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Dashboard updated with Grok's assessment</span>`;
@@ -465,7 +468,6 @@ MOMENTUM_DETAIL: [2-3 sentences]
         
         function loadConflictScenario(scenario) {
             const content = document.getElementById('conflict-outcome-content');
-            
             let html = '';
             
             if (scenario === 'taiwan') {
@@ -497,7 +499,6 @@ MOMENTUM_DETAIL: [2-3 sentences]
             initTailwind();
             createConfidenceChart();
             
-            // Initial domain scorecard
             const scorecard = document.getElementById('domain-scorecard');
             scorecard.innerHTML = `
                 <div class="bg-[#1e2937] rounded-2xl p-4">
@@ -530,7 +531,6 @@ MOMENTUM_DETAIL: [2-3 sentences]
                 </div>
             `;
             
-            // Initial critical linkages
             const linkages = document.getElementById('critical-linkages');
             linkages.innerHTML = `
                 <div class="flex gap-x-3">
@@ -545,28 +545,31 @@ MOMENTUM_DETAIL: [2-3 sentences]
                     <span class="text-emerald-400">03</span>
                     <span>US political polarization is eroding alliance cohesion, creating openings for Chinese narrative gains in the Global South.</span>
                 </div>
+                <div class="flex gap-x-3">
+                    <span class="text-emerald-400">04</span>
+                    <span>Russian energy leverage over Europe remains a key constraint on EU strategic autonomy and military support for Ukraine.</span>
+                </div>
             `;
             
-            // Initial forward content
             document.getElementById('forward-content').innerHTML = `
                 <div>
                     <div class="text-emerald-400 font-medium mb-1">30 DAYS</div>
-                    <div class="text-sm">Ukraine stalemate continues. SCS gray-zone pressure intensifies. Iran blockade remains active. China continues testing US resolve in the Taiwan Strait.</div>
+                    <div class="text-sm">Ukraine stalemate continues. SCS gray-zone pressure intensifies. Iran blockade remains active. China continues testing US resolve in the Taiwan Strait. Russia maintains pressure on European energy and political cohesion.</div>
                 </div>
                 <div>
                     <div class="text-emerald-400 font-medium mb-1">90 DAYS</div>
-                    <div class="text-sm">Potential Ukraine peace framework or frozen conflict. Larger Chinese maritime exercises expected. AGI capability demonstrations likely from both sides.</div>
+                    <div class="text-sm">Potential Ukraine peace framework or frozen conflict. Larger Chinese maritime exercises expected. AGI capability demonstrations likely from both sides. EU faces critical decisions on long-term energy and defense posture.</div>
                 </div>
                 <div>
                     <div class="text-emerald-400 font-medium mb-1">180 DAYS</div>
-                    <div class="text-sm">Either negotiated Ukraine settlement or attritional freeze, freeing bandwidth for Indo-Pacific focus. The AGI race is expected to intensify significantly.</div>
+                    <div class="text-sm">Either negotiated Ukraine settlement or attritional freeze, freeing bandwidth for Indo-Pacific focus. The AGI race is expected to intensify significantly. Russia-China alignment and EU strategic autonomy will be major variables.</div>
                 </div>
             `;
             
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.2] Final version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.3] Final version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
