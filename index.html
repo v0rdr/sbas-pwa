@@ -137,7 +137,7 @@
                         </div>
                     </div>
                     
-                    <!-- Energy & Critical Minerals -->
+                    <!-- Top 3 Strategic Chokepoints -->
                     <div class="lg:col-span-5 modern-card glass rounded-3xl p-8 premium-shadow expandable-card" onclick="toggleCard(this)">
                         <div class="font-semibold mb-4">Top 3 Strategic Chokepoints</div>
                         <div class="space-y-3 text-sm">
@@ -241,48 +241,109 @@
                     </div>
                 </div>
                 
+                <!-- Strategic Frameworks -->
+                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
+                    <div class="font-semibold mb-4">Strategic Frameworks in Play</div>
+                    
+                    <div class="space-y-4">
+                        <!-- Heartland vs Rimland -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="font-medium">Heartland vs Rimland</span>
+                                    <span class="text-xs px-2 py-0.5 bg-teal-500/20 text-teal-400 rounded">Mackinder / Spykman</span>
+                                </div>
+                                <div class="flex items-center gap-x-1">
+                                    <div class="w-20 h-1.5 bg-teal-500 rounded-full"><div class="w-[90%] h-1.5 bg-teal-400 rounded-full"></div></div>
+                                    <span class="text-xs text-teal-400">90%</span>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-400">China is actively pursuing a Heartland strategy through BRI land corridors while challenging Rimland control at key chokepoints.</div>
+                        </div>
+                        
+                        <!-- Offensive Realism -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="font-medium">Offensive Realism</span>
+                                    <span class="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded">Mearsheimer</span>
+                                </div>
+                                <div class="flex items-center gap-x-1">
+                                    <div class="w-20 h-1.5 bg-red-500 rounded-full"><div class="w-[75%] h-1.5 bg-red-400 rounded-full"></div></div>
+                                    <span class="text-xs text-red-400">75%</span>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-400">Great power competition is intensifying as China seeks regional hegemony in East Asia, consistent with offensive realist predictions.</div>
+                        </div>
+                        
+                        <!-- Sea Power -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="font-medium">Sea Power</span>
+                                    <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">Mahan</span>
+                                </div>
+                                <div class="flex items-center gap-x-1">
+                                    <div class="w-20 h-1.5 bg-blue-500 rounded-full"><div class="w-[65%] h-1.5 bg-blue-400 rounded-full"></div></div>
+                                    <span class="text-xs text-blue-400">65%</span>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-400">The US continues to rely on Mahanian sea power and chokepoint control, while China is hedging with both maritime and overland strategies.</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Global Chokepoint Overview -->
                 <div class="glass rounded-3xl p-8 premium-shadow mt-6">
-                    <div class="font-semibold mb-4">Global Chokepoint Overview</div>
-                    <svg width="100%" height="220" viewBox="0 0 800 220" class="mx-auto">
+                    <div class="font-semibold mb-4">Global Chokepoint Overview — Heartland vs Rimland</div>
+                    <svg width="100%" height="240" viewBox="0 0 900 240" class="mx-auto">
                         <!-- Background -->
-                        <rect width="800" height="220" fill="#1e2937" rx="12"/>
+                        <rect width="900" height="240" fill="#1e2937" rx="12"/>
                         
-                        <!-- Major Chokepoints -->
+                        <!-- Title -->
+                        <text x="450" y="25" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="600">Heartland (Overland) vs Rimland (Maritime)</text>
+                        
+                        <!-- Heartland Label -->
+                        <text x="150" y="55" text-anchor="middle" fill="#14b8a6" font-size="11" font-weight="600">HEARTLAND</text>
+                        <text x="150" y="68" text-anchor="middle" fill="#64748b" font-size="9">(China BRI Strategy)</text>
+                        
+                        <!-- Rimland Label -->
+                        <text x="750" y="55" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">RIMLAND</text>
+                        <text x="750" y="68" text-anchor="middle" fill="#64748b" font-size="9">(US Maritime Strategy)</text>
+                        
+                        <!-- Overland Corridor (Heartland) -->
+                        <path d="M 120 100 Q 200 80 280 95 Q 350 85 420 100" fill="none" stroke="#14b8a6" stroke-width="3" stroke-dasharray="6,3"/>
+                        <text x="270" y="78" fill="#14b8a6" font-size="9">BRI Overland Corridor</text>
+                        
+                        <!-- Maritime Chokepoints (Rimland) -->
                         <!-- Malacca -->
-                        <circle cx="320" cy="140" r="8" fill="#ef4444" class="chokepoint"/>
-                        <text x="320" y="165" text-anchor="middle" fill="#94a3b8" font-size="11">Malacca</text>
-                        <text x="320" y="178" text-anchor="middle" fill="#ef4444" font-size="9">HIGH RISK</text>
+                        <circle cx="320" cy="150" r="9" fill="#ef4444"/>
+                        <text x="320" y="175" text-anchor="middle" fill="#94a3b8" font-size="10">Malacca</text>
+                        <text x="320" y="188" text-anchor="middle" fill="#ef4444" font-size="8">HIGH RISK</text>
                         
                         <!-- Hormuz -->
-                        <circle cx="420" cy="120" r="8" fill="#f59e0b" class="chokepoint"/>
-                        <text x="420" y="145" text-anchor="middle" fill="#94a3b8" font-size="11">Hormuz</text>
-                        <text x="420" y="158" text-anchor="middle" fill="#f59e0b" font-size="9">ELEVATED</text>
+                        <circle cx="420" cy="130" r="9" fill="#f59e0b"/>
+                        <text x="420" y="155" text-anchor="middle" fill="#94a3b8" font-size="10">Hormuz</text>
+                        <text x="420" y="168" text-anchor="middle" fill="#f59e0b" font-size="8">ELEVATED</text>
                         
                         <!-- Taiwan Strait -->
-                        <circle cx="580" cy="100" r="8" fill="#ef4444" class="chokepoint"/>
-                        <text x="580" y="125" text-anchor="middle" fill="#94a3b8" font-size="11">Taiwan Strait</text>
-                        <text x="580" y="138" text-anchor="middle" fill="#ef4444" font-size="9">HIGH RISK</text>
-                        
-                        <!-- Suez -->
-                        <circle cx="480" cy="85" r="6" fill="#10b981" class="chokepoint"/>
-                        <text x="480" y="105" text-anchor="middle" fill="#94a3b8" font-size="10">Suez</text>
-                        
-                        <!-- Panama -->
-                        <circle cx="200" cy="130" r="6" fill="#10b981" class="chokepoint"/>
-                        <text x="200" y="150" text-anchor="middle" fill="#94a3b8" font-size="10">Panama</text>
+                        <circle cx="580" cy="110" r="9" fill="#ef4444"/>
+                        <text x="580" y="135" text-anchor="middle" fill="#94a3b8" font-size="10">Taiwan Strait</text>
+                        <text x="580" y="148" text-anchor="middle" fill="#ef4444" font-size="8">HIGH RISK</text>
                         
                         <!-- Legend -->
-                        <rect x="650" y="30" width="130" height="80" rx="6" fill="#334155"/>
-                        <text x="715" y="50" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="600">Status</text>
-                        <circle cx="665" cy="68" r="5" fill="#ef4444"/>
-                        <text x="680" y="72" fill="#e2e8f0" font-size="10">High Risk</text>
-                        <circle cx="665" cy="85" r="5" fill="#f59e0b"/>
-                        <text x="680" y="89" fill="#e2e8f0" font-size="10">Elevated</text>
-                        <circle cx="665" cy="102" r="5" fill="#10b981"/>
-                        <text x="680" y="106" fill="#e2e8f0" font-size="10">Stable</text>
+                        <rect x="680" y="85" width="180" height="95" rx="6" fill="#334155"/>
+                        <text x="770" y="102" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="600">Status</text>
+                        <circle cx="695" cy="120" r="5" fill="#ef4444"/>
+                        <text x="710" y="124" fill="#e2e8f0" font-size="10">High Risk</text>
+                        <circle cx="695" cy="138" r="5" fill="#f59e0b"/>
+                        <text x="710" y="142" fill="#e2e8f0" font-size="10">Elevated</text>
+                        <circle cx="695" cy="156" r="5" fill="#10b981"/>
+                        <text x="710" y="160" fill="#e2e8f0" font-size="10">Stable</text>
+                        <line x1="695" y1="178" x2="710" y2="178" stroke="#14b8a6" stroke-width="2" stroke-dasharray="4,2"/>
+                        <text x="720" y="182" fill="#e2e8f0" font-size="10">Heartland (BRI)</text>
                     </svg>
-                    <div class="text-xs text-slate-400 text-center mt-2">Major strategic chokepoints and current control status</div>
+                    <div class="text-xs text-slate-400 text-center mt-2">Heartland (overland) vs Rimland (maritime) strategic competition</div>
                 </div>
             </div>
         </div>
