@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v8.3">
-    <title>SBAS v8.3 • Strategic Companion</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v8.4">
+    <title>SBAS v8.4 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,16 +19,12 @@
         .modern-card:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
         .section-header { font-size: 10px; letter-spacing: 2px; font-weight: 700; color: #64748b; }
         .premium-shadow { box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.4), 0 4px 6px -4px rgb(15 23 42 / 0.4); }
-        .metric-value { font-variant-numeric: tabular-nums; }
-        .dashboard-tab { transition: all 0.2s ease; }
-        .dashboard-tab.active { background: #1e2937; color: white; border-radius: 12px; }
-        .grok-btn { background: linear-gradient(135deg, #1e5f8a 0%, #3b82f6 100%); }
-        .grok-btn:hover { background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); }
         .updated { animation: updated-pulse 1.8s ease-out; }
         @keyframes updated-pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-        .node { transition: all 0.2s ease; }
-        .node:hover { transform: scale(1.05); }
-        .linkage { transition: all 0.2s ease; }
+        .node { transition: all 0.2s ease; cursor: pointer; }
+        .node:hover { transform: scale(1.1); }
+        .linkage-line { stroke: #64748b; stroke-width: 1.5; stroke-opacity: 0.6; }
+        .linkage-line.active { stroke: #10b981; stroke-width: 2.5; stroke-opacity: 1; }
         @media (max-width: 640px) {
             .glass, .modern-card { border-radius: 20px; }
             .text-5xl { font-size: 2.5rem; }
@@ -45,7 +41,7 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.3</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.4</span>
                 </div>
             </div>
             
@@ -95,13 +91,17 @@
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">STRATEGIC BALANCE OVERVIEW</div>
                 
+                <!-- Overall Balance + What Changed -->
                 <div class="glass rounded-3xl p-8 premium-shadow mb-6" id="balance-card">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex justify-between items-start mb-6">
                         <div>
                             <div class="font-semibold text-2xl">Current Strategic Balance</div>
                             <div class="text-sm text-slate-400">As of 20 April 2026</div>
                         </div>
-                        <div class="px-4 py-2 bg-amber-500/10 text-amber-400 rounded-2xl text-sm font-medium" id="overall-balance">SLIGHTLY TILTED TOWARD CHINA</div>
+                        <div>
+                            <div class="px-4 py-2 bg-amber-500/10 text-amber-400 rounded-2xl text-sm font-medium" id="overall-balance">SLIGHTLY TILTED TOWARD CHINA</div>
+                            <div class="text-xs text-emerald-400 mt-1 text-right" id="what-changed">+3 China • -2 US since last refresh</div>
+                        </div>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -131,13 +131,25 @@
                     </div>
                 </div>
 
-                <div class="glass rounded-3xl p-8 premium-shadow mb-6">
-                    <div class="font-semibold mb-4">Domain Balance Scorecard</div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="domain-scorecard">
-                        <!-- Populated dynamically -->
+                <!-- Visualizations Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    
+                    <!-- Domain Balance Radar -->
+                    <div class="glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Domain Balance</div>
+                        <div class="h-80"><canvas id="radarChart"></canvas></div>
+                    </div>
+                    
+                    <!-- Causal Linkage Network -->
+                    <div class="glass rounded-3xl p-8 premium-shadow">
+                        <div class="font-semibold mb-4">Causal Linkages</div>
+                        <div class="h-80 relative" id="linkage-container">
+                            <svg id="linkage-svg" width="100%" height="100%" class="absolute top-0 left-0"></svg>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Top Critical Linkages -->
                 <div class="glass rounded-3xl p-8 premium-shadow">
                     <div class="font-semibold mb-4">Top Critical Linkages</div>
                     <div class="space-y-3 text-sm" id="critical-linkages">
@@ -188,14 +200,9 @@
                 <div class="section-header mb-4 px-1">TRAJECTORY &amp; MOMENTUM</div>
                 
                 <div class="glass rounded-3xl p-8 premium-shadow mb-6">
-                    <div class="font-semibold mb-4">Confidence Trend (Last 8 Assessments)</div>
-                    <div class="h-80"><canvas id="confidenceChart"></canvas></div>
-                </div>
-                
-                <div class="glass rounded-3xl p-8 premium-shadow">
-                    <div class="font-semibold mb-4">Momentum Summary</div>
-                    <div class="text-lg" id="momentum-summary">China confidence is <span class="text-red-400 font-semibold">accelerating</span> while US confidence is under sustained pressure.</div>
-                    <div class="text-sm text-slate-400 mt-2" id="momentum-detail">China has gained 18 points since March, primarily driven by shipbuilding momentum and perceived progress in the AGI race.</div>
+                    <div class="font-semibold mb-4">Confidence Trend + Strategic Thresholds</div>
+                    <div class="h-80"><canvas id="momentumChart"></canvas></div>
+                    <div class="text-xs text-center text-slate-400 mt-2">Red zone = Approaching Overconfidence | Blue zone = Approaching Desperation</div>
                 </div>
             </div>
         </div>
@@ -281,13 +288,31 @@
     <script>
         function initTailwind() {}
         
-        let chartInstance = null;
+        let radarChartInstance = null;
+        let momentumChartInstance = null;
         
-        function createConfidenceChart() {
-            const ctx = document.getElementById('confidenceChart');
-            if (chartInstance) chartInstance.destroy();
+        function createRadarChart() {
+            const ctx = document.getElementById('radarChart');
+            if (radarChartInstance) radarChartInstance.destroy();
             
-            chartInstance = new Chart(ctx, {
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['AGI/Tech', 'Drone & Autonomous', 'Energy & Minerals', 'Maritime Control', 'Land Power', 'Societal Stability', 'EU Cohesion'],
+                    datasets: [
+                        { label: 'China', data: [72, 78, 85, 45, 82, 68, 55], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.2)' },
+                        { label: 'US/Allied', data: [84, 70, 70, 78, 55, 72, 65], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.2)' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, max: 100 } } }
+            });
+        }
+        
+        function createMomentumChart() {
+            const ctx = document.getElementById('momentumChart');
+            if (momentumChartInstance) momentumChartInstance.destroy();
+            
+            momentumChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: { 
                     labels: ['1 Mar', '8 Mar', '15 Mar', '22 Mar', '29 Mar', '5 Apr', '12 Apr', '19 Apr'],
@@ -298,6 +323,65 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true, max: 100 } } }
             });
+        }
+        
+        function createLinkageNetwork() {
+            const container = document.getElementById('linkage-container');
+            const svg = document.getElementById('linkage-svg');
+            svg.innerHTML = '';
+            
+            const nodes = [
+                { id: 'agi', label: 'AGI', x: 120, y: 80, color: '#10b981' },
+                { id: 'drone', label: 'Drone', x: 280, y: 60, color: '#8b5cf6' },
+                { id: 'energy', label: 'Energy', x: 200, y: 140, color: '#f59e0b' },
+                { id: 'maritime', label: 'Maritime', x: 80, y: 160, color: '#3b82f6' },
+                { id: 'russia', label: 'Russia', x: 320, y: 180, color: '#ef4444' }
+            ];
+            
+            // Draw lines
+            const lines = [
+                [0, 1], [0, 2], [1, 2], [2, 3], [3, 4], [1, 4]
+            ];
+            
+            lines.forEach(([a, b]) => {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", nodes[a].x);
+                line.setAttribute("y1", nodes[a].y);
+                line.setAttribute("x2", nodes[b].x);
+                line.setAttribute("y2", nodes[b].y);
+                line.setAttribute("class", "linkage-line");
+                svg.appendChild(line);
+            });
+            
+            // Draw nodes
+            nodes.forEach((node, index) => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", node.x);
+                circle.setAttribute("cy", node.y);
+                circle.setAttribute("r", "18");
+                circle.setAttribute("fill", node.color);
+                circle.setAttribute("class", "node");
+                circle.onclick = () => highlightLinkage(index);
+                svg.appendChild(circle);
+                
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", node.x);
+                text.setAttribute("y", node.y + 5);
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("fill", "white");
+                text.setAttribute("font-size", "11");
+                text.setAttribute("font-weight", "600");
+                text.textContent = node.label;
+                svg.appendChild(text);
+            });
+        }
+        
+        function highlightLinkage(index) {
+            // Simple highlight effect
+            const svg = document.getElementById('linkage-svg');
+            svg.style.transition = 'all 0.3s ease';
+            svg.style.filter = 'brightness(1.3)';
+            setTimeout(() => { svg.style.filter = 'none'; }, 600);
         }
         
         function switchDashboard(dashboard) {
@@ -338,7 +422,7 @@
         }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v8.3, an elite first-principles strategic awareness engine and living intelligence system.
+            const prompt = `You are SBAS v8.4, an elite first-principles strategic awareness engine and living intelligence system.
 
 Your purpose is to help the user maintain the clearest possible mental model of the multi-polar great power competition (US, China, Russia, EU).
 
@@ -348,7 +432,7 @@ Prioritize recent leader statements, observable actions, think tank analysis (CS
 
 Return in this exact format:
 
-[SBAS_V8.3_START]
+[SBAS_V8.4_START]
 
 OVERALL_BALANCE: [1-2 sentence judgment]
 CHINA_CONFIDENCE: [58-72]
@@ -374,14 +458,14 @@ DOMAIN_SCORECARD:
 - Maritime Control: [Who leads + margin]
 - Land Power (Heartland): [Who leads + margin]
 - Societal Stability: [Who leads + margin]
-- EU Political Cohesion: [Who leads + margin]
+- EU Cohesion: [Who leads + margin]
 
 ===EURASIAN_CHESSBOARD===
 [Rich 6-8 sentence narrative]
 ===END===
 
 ===DRONE_SECTION===
-[Rich 7-9 sentence narrative including battlefield, infrastructure attacks, and China-USA-Russia dynamics]
+[Rich 7-9 sentence narrative including battlefield, infrastructure attacks, and multi-actor dynamics]
 ===END===
 
 ===AGI_RACE===
@@ -395,7 +479,7 @@ MOMENTUM_DETAIL: [2-3 sentences]
 90_DAY: [Brief]
 180_DAY: [Brief]
 
-[SBAS_V8.3_END]`;
+[SBAS_V8.4_END]`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
@@ -417,8 +501,6 @@ MOMENTUM_DETAIL: [2-3 sentences]
             const overallMatch = text.match(/OVERALL_BALANCE:\s*(.+)/i);
             const chinaMatch = text.match(/CHINA_CONFIDENCE:\s*(\d+)/i);
             const usMatch = text.match(/US_CONFIDENCE:\s*(\d+)/i);
-            const russiaMatch = text.match(/RUSSIA_CONFIDENCE:\s*(\d+)/i);
-            const euMatch = text.match(/EU_CONFIDENCE:\s*(\d+)/i);
             const chinaStateMatch = text.match(/CHINA_STATE:\s*(.+)/i);
             const usStateMatch = text.match(/US_STATE:\s*(.+)/i);
             const momentumMatch = text.match(/MOMENTUM_SUMMARY:\s*(.+)/i);
@@ -497,7 +579,9 @@ MOMENTUM_DETAIL: [2-3 sentences]
         
         function init() {
             initTailwind();
-            createConfidenceChart();
+            createRadarChart();
+            createMomentumChart();
+            createLinkageNetwork();
             
             const scorecard = document.getElementById('domain-scorecard');
             scorecard.innerHTML = `
@@ -569,7 +653,7 @@ MOMENTUM_DETAIL: [2-3 sentences]
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.3] Final version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.4] Final version loaded with full visualizations.', 'color:#64748b');
         }
         
         window.onload = init;
