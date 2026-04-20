@@ -36,8 +36,8 @@
         .node-card.active { border: 2px solid #3b82f6; }
         @media (max-width: 640px) {
             .section-header { font-size: 9px; }
-            .glass { border-radius: 20px; }
-            .modern-card { border-radius: 20px; }
+            .glass, .modern-card { border-radius: 20px; }
+            .text-xl { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -114,7 +114,8 @@
                     <div class="section-header mb-4 px-1">KEY THEATERS</div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="glass rounded-3xl p-6 premium-shadow">
+                        <!-- Russia / Ukraine -->
+                        <div class="glass rounded-3xl p-6 premium-shadow expandable-card" onclick="toggleCard(this)">
                             <div class="flex items-center gap-x-3 mb-4">
                                 <div class="w-9 h-9 bg-red-500/20 rounded-2xl flex items-center justify-center">
                                     <i class="fa-solid fa-shield-halved text-red-400"></i>
@@ -130,9 +131,13 @@
                                 <div>Status: <span class="text-amber-400">Contested Stalemate</span></div>
                                 <div>Escalation Risk: <span class="text-orange-400">Elevated</span></div>
                             </div>
+                            <div class="card-narrative text-sm text-slate-300 leading-relaxed">
+                                The conflict has evolved into a brutal war of attrition. Russia maintains initiative through superior artillery and drone production, while Ukraine relies on Western long-range systems and innovative drone tactics. Drone warfare has fundamentally changed the battlefield, with FPV drones and Lancet strikes causing disproportionate casualties. Energy infrastructure on both sides has become a primary target, with Ukraine successfully striking Russian refineries and Russia targeting Ukrainian power grids. The war is testing the limits of industrial production and manpower sustainability for both nations.
+                            </div>
                         </div>
                         
-                        <div class="glass rounded-3xl p-6 premium-shadow">
+                        <!-- USA / Iran -->
+                        <div class="glass rounded-3xl p-6 premium-shadow expandable-card" onclick="toggleCard(this)">
                             <div class="flex items-center gap-x-3 mb-4">
                                 <div class="w-9 h-9 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
                                     <i class="fa-solid fa-globe text-yellow-400"></i>
@@ -147,6 +152,9 @@
                                 <div>Shadow Fleet: 557+ vessels sanctioned</div>
                                 <div>Risk Level: <span class="text-red-400">HIGH</span></div>
                                 <div>Ceasefire: Fragile (since 8 Apr)</div>
+                            </div>
+                            <div class="card-narrative text-sm text-slate-300 leading-relaxed">
+                                The US maintains a de facto blockade of the Strait of Hormuz through sanctions and naval presence, severely constraining Iran's oil exports. Iran has responded with asymmetric tactics, including drone and missile attacks on commercial shipping and critical infrastructure in the region. The shadow fleet of sanctioned tankers continues to operate, but at increasing risk. This conflict directly impacts global energy prices and tests the limits of sanctions as a strategic tool. Any escalation here would have immediate global economic consequences.
                             </div>
                         </div>
                     </div>
@@ -303,7 +311,7 @@
                     </div>
                 </div>
                 
-                <!-- Eurasian Chessboard (Expanded Narrative) -->
+                <!-- Eurasian Chessboard (Expanded) -->
                 <div class="glass rounded-3xl p-8 premium-shadow mt-6">
                     <div class="flex items-center gap-x-3 mb-4">
                         <i class="fa-solid fa-globe text-blue-400"></i>
@@ -364,46 +372,78 @@
                     </div>
                 </div>
                 
-                <!-- Optimized Grand Strategic Progress -->
+                <!-- Drone & Autonomous Warfare -->
+                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <i class="fa-solid fa-drone text-purple-400"></i>
+                        <div class="font-semibold">Drone &amp; Autonomous Warfare</div>
+                    </div>
+                    <div class="text-sm text-slate-300 leading-relaxed">
+                        <strong>Current Battlefield:</strong> Ukraine has demonstrated the transformative power of low-cost FPV drones and Lancet strikes, fundamentally altering combined arms tactics. Russia has responded with massed drone and artillery barrages, while both sides increasingly target critical infrastructure with long-range drones.<br><br>
+                        <strong>China–USA Race:</strong> China currently leads in production scale and swarming technology, while the US maintains advantages in AI autonomy, electronic warfare resistance, and integration with manned platforms. This race is accelerating, with major implications for a potential Taiwan conflict where drone saturation and infrastructure attacks could decide the outcome.
+                    </div>
+                </div>
+                
+                <!-- Strategic Resource Dominance -->
+                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
+                    <div class="font-semibold mb-4">Strategic Resource Dominance</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="font-medium text-blue-400 mb-3">Energy Flows</div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between"><span>US/Allied Control</span><span class="text-blue-400">Strong (Maritime)</span></div>
+                                <div class="flex justify-between"><span>China Vulnerability</span><span class="text-red-400">High (Malacca/Hormuz)</span></div>
+                                <div class="flex justify-between"><span>China Mitigation</span><span class="text-teal-400">Pipelines + BRI</span></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="font-medium text-teal-400 mb-3">Rare Earths &amp; Critical Minerals</div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between"><span>China Dominance</span><span class="text-teal-400">Mining + Processing (70%+)</span></div>
+                                <div class="flex justify-between"><span>US/Allied Position</span><span class="text-amber-400">Improving (Australia, Canada)</span></div>
+                                <div class="flex justify-between"><span>Trend</span><span class="text-red-400">China still dominant</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AGI Race -->
+                <div class="glass rounded-3xl p-8 premium-shadow mt-6">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <i class="fa-solid fa-robot text-emerald-400"></i>
+                        <div class="font-semibold">AGI Race</div>
+                    </div>
+                    <div class="text-sm text-slate-300 leading-relaxed">
+                        The United States currently maintains a lead in frontier AI model capabilities and talent, but China is closing the gap rapidly through massive state investment and data advantages. The race is increasingly about <strong>compute access, energy availability, and talent concentration</strong>. Whoever achieves AGI first will gain decisive advantages across military, economic, and narrative domains. This is becoming the central strategic competition of the 21st century.
+                    </div>
+                </div>
+                
+                <!-- Grand Strategic Progress -->
                 <div class="glass rounded-3xl p-8 premium-shadow mt-6">
                     <div class="font-semibold mb-4">Grand Strategic Progress — Heartland vs Rimland</div>
                     
-                    <!-- Progress Bars with Momentum -->
                     <div class="mb-6">
                         <div class="mb-4">
                             <div class="flex justify-between items-center mb-1">
-                                <div class="flex items-center gap-x-2">
-                                    <span class="font-medium">US Rimland Strategy (Mahan)</span>
-                                    <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">68%</span>
-                                </div>
-                                <div class="flex items-center gap-x-1 text-xs">
-                                    <span class="text-blue-400">Gaining</span>
-                                    <i class="fa-solid fa-arrow-up text-blue-400"></i>
-                                </div>
+                                <span class="font-medium">US Rimland Strategy (Mahan)</span>
+                                <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">68%</span>
                             </div>
                             <div class="h-3 bg-white/10 rounded-full"><div class="h-3 bg-blue-500 rounded-full" style="width:68%"></div></div>
                         </div>
                         
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <div class="flex items-center gap-x-2">
-                                    <span class="font-medium">China Heartland Strategy (Mackinder)</span>
-                                    <span class="text-xs px-2 py-0.5 bg-teal-500/20 text-teal-400 rounded">52%</span>
-                                </div>
-                                <div class="flex items-center gap-x-1 text-xs">
-                                    <span class="text-teal-400">Accelerating</span>
-                                    <i class="fa-solid fa-arrow-up text-teal-400"></i>
-                                </div>
+                                <span class="font-medium">China Heartland Strategy (Mackinder)</span>
+                                <span class="text-xs px-2 py-0.5 bg-teal-500/20 text-teal-400 rounded">52%</span>
                             </div>
                             <div class="h-3 bg-white/10 rounded-full"><div class="h-3 bg-teal-500 rounded-full" style="width:52%"></div></div>
                         </div>
                     </div>
                     
-                    <!-- Interactive Strategic Nodes -->
                     <div class="bg-[#1e2937] rounded-2xl p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            
-                            <!-- US Rimland -->
                             <div>
                                 <div class="flex items-center gap-x-2 mb-4">
                                     <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
@@ -414,9 +454,7 @@
                                 
                                 <div class="space-y-3">
                                     <div onclick="highlightNode('malacca')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-malacca">
-                                        <div class="flex items-center gap-x-3">
-                                            <span class="text-sm">Malacca Strait</span>
-                                        </div>
+                                        <span class="text-sm">Malacca Strait</span>
                                         <div class="flex items-center gap-x-2">
                                             <span class="px-2.5 py-0.5 text-xs rounded-full bg-red-500/20 text-red-400">HIGH RISK</span>
                                             <i class="fa-solid fa-arrow-down text-red-400"></i>
@@ -424,9 +462,7 @@
                                     </div>
                                     
                                     <div onclick="highlightNode('taiwan')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-taiwan">
-                                        <div class="flex items-center gap-x-3">
-                                            <span class="text-sm">Taiwan Strait</span>
-                                        </div>
+                                        <span class="text-sm">Taiwan Strait</span>
                                         <div class="flex items-center gap-x-2">
                                             <span class="px-2.5 py-0.5 text-xs rounded-full bg-red-500/20 text-red-400">HIGH RISK</span>
                                             <i class="fa-solid fa-arrow-down text-red-400"></i>
@@ -434,9 +470,7 @@
                                     </div>
                                     
                                     <div onclick="highlightNode('hormuz')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-hormuz">
-                                        <div class="flex items-center gap-x-3">
-                                            <span class="text-sm">Hormuz Strait</span>
-                                        </div>
+                                        <span class="text-sm">Hormuz Strait</span>
                                         <div class="flex items-center gap-x-2">
                                             <span class="px-2.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-400">ELEVATED</span>
                                             <i class="fa-solid fa-minus text-amber-400"></i>
@@ -445,7 +479,6 @@
                                 </div>
                             </div>
                             
-                            <!-- China Heartland -->
                             <div>
                                 <div class="flex items-center gap-x-2 mb-4">
                                     <div class="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
@@ -456,9 +489,7 @@
                                 
                                 <div class="space-y-3">
                                     <div onclick="highlightNode('cpec')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-cpec">
-                                        <div class="flex items-center gap-x-3">
-                                            <span class="text-sm">CPEC / Gwadar</span>
-                                        </div>
+                                        <span class="text-sm">CPEC / Gwadar</span>
                                         <div class="flex items-center gap-x-2">
                                             <span class="px-2.5 py-0.5 text-xs rounded-full bg-teal-500/20 text-teal-400">ADVANCING</span>
                                             <i class="fa-solid fa-arrow-up text-teal-400"></i>
@@ -466,9 +497,7 @@
                                     </div>
                                     
                                     <div onclick="highlightNode('russia')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-russia">
-                                        <div class="flex items-center gap-x-3">
-                                            <span class="text-sm">Russia-China Pipelines</span>
-                                        </div>
+                                        <span class="text-sm">Russia-China Pipelines</span>
                                         <div class="flex items-center gap-x-2">
                                             <span class="px-2.5 py-0.5 text-xs rounded-full bg-teal-500/20 text-teal-400">ADVANCING</span>
                                             <i class="fa-solid fa-arrow-up text-teal-400"></i>
@@ -476,9 +505,7 @@
                                     </div>
                                     
                                     <div onclick="highlightNode('myanmar')" class="node-card flex justify-between items-center bg-[#334155] hover:bg-[#475569] rounded-xl px-4 py-3 cursor-pointer" id="node-myanmar">
-                                        <div class="flex items-center gap-x-3">
-                                            <span class="text-sm">Myanmar Corridor</span>
-                                        </div>
+                                        <span class="text-sm">Myanmar Corridor</span>
                                         <div class="flex items-center gap-x-2">
                                             <span class="px-2.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-400">STABLE</span>
                                             <i class="fa-solid fa-minus text-amber-400"></i>
@@ -486,7 +513,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
                         
                         <div class="mt-6 pt-4 border-t border-white/10 text-center">
@@ -613,22 +639,22 @@
                 let message = '';
                 switch(nodeId) {
                     case 'malacca':
-                        message = 'Malacca Strait is the most critical chokepoint for China. Disruption here would severely impact Chinese energy imports and force reliance on overland alternatives.';
+                        message = 'Malacca Strait is the most critical chokepoint for China. Disruption here would severely impact Chinese energy imports.';
                         break;
                     case 'taiwan':
-                        message = 'Taiwan Strait remains the highest-risk flashpoint. Any escalation here would likely trigger full US intervention and fundamentally alter the strategic balance.';
+                        message = 'Taiwan Strait remains the highest-risk flashpoint. Any escalation here would likely trigger full US intervention.';
                         break;
                     case 'hormuz':
-                        message = 'Hormuz Strait is currently under US blockade. This is the most active point of US-Iran tension and directly impacts global energy markets.';
+                        message = 'Hormuz Strait is currently under US blockade. This is the most active point of US-Iran tension.';
                         break;
                     case 'cpec':
-                        message = 'CPEC (China-Pakistan Economic Corridor) is China\'s most advanced overland bypass to Malacca, providing direct access to the Indian Ocean.';
+                        message = 'CPEC (China-Pakistan Economic Corridor) is China\'s most advanced overland bypass to Malacca.';
                         break;
                     case 'russia':
-                        message = 'Russia-China energy pipelines are the backbone of China\'s Heartland energy security strategy, reducing dependence on vulnerable sea lanes.';
+                        message = 'Russia-China energy pipelines are the backbone of China\'s Heartland energy security strategy.';
                         break;
                     case 'myanmar':
-                        message = 'Myanmar Corridor provides China with direct Indian Ocean access, significantly reducing Malacca dependency for energy imports.';
+                        message = 'Myanmar Corridor provides China with direct Indian Ocean access, reducing Malacca dependency.';
                         break;
                 }
                 
@@ -641,7 +667,7 @@
                     toast.style.transition = 'all 0.4s ease';
                     toast.style.opacity = '0';
                     setTimeout(() => toast.remove(), 400);
-                }, 3800);
+                }, 3500);
             }
         }
         
@@ -740,7 +766,7 @@
             document.getElementById('dashboard-current').classList.remove('hidden');
             document.querySelector('[data-tab="current"]').classList.add('active');
             
-            console.log('%c[SBAS v7.0] Final polished version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v7.0] Final version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
