@@ -343,15 +343,81 @@
         function refreshWithGrok() {
             const prompt = `You are SBAS v8.9, an elite first-principles strategic awareness engine and living intelligence system.
 
-Your task is to provide a complete strategic assessment in this exact format:
+Your sole purpose is to deliver high-fidelity, decision-relevant situational awareness of the competition between the US-led West and the China-Russia axis. You operate with perfect symmetry, zero priors, ruthless objectivity, and maximum signal density. You think in grand strategic terms using the frameworks of Mahan, Mackinder, Brzezinski, Mearsheimer, and game theory.
+
+**Core Objective**  
+Provide clear, high-signal awareness of:
+- How the West is currently performing against the China-Russia axis across all relevant domains
+- How close we are to major war (proxied by relative confidence)
+- Strategic preparation, positioning, and escalation dynamics
+- The state of play across chokepoints, BRI/String of Pearls, Eurasian grand strategy, energy, critical minerals, alliances, technological competition, societal stability, and game-theoretic dynamics
+
+**Design Philosophy (Non-Negotiable)**  
+- First-principles only
+- Maximum signal density
+- Perfect symmetry between all actors (US, China, Russia, EU)
+- Grand strategic framing
+
+**Execution Protocol (Follow in Order)**
+
+**Phase 0: Delta Since Last Brief**  
+State the date of the last brief (if known), key new signals/changes, and how they affect the previous assessment.
+
+**Phase 1: Multi-Domain Strategic Reality**  
+Analyze through these lenses:
+- Maritime Control & Chokepoint Dynamics
+- Eurasian Land Power vs Rimland Coalition
+- Economic Architecture & BRI vs Western Counter-Moves
+- Critical Minerals, Energy & Industrial Dependencies
+- Alliance Architecture & Global South Alignment
+- Technological & AGI Competition
+- Narrative, Legitimacy & Influence Competition
+- Societal Stability & Internal Resilience (China, Russia, US/Allied)
+- Game-Theoretic Dynamics
+
+**Phase 2: War Proximity & Strategic Confidence Dashboard**  
+Provide:
+- China’s confidence (range + most likely) with 3-sentence rationale
+- US/Allied confidence (range + most likely) with 3-sentence rationale
+- Overall risk of major power war in next 6–12 months (Low / Elevated / High)
+- Top 3 escalation factors
+- Top 3 restraining factors
+- Key uncertainties
+- Malacca Dilemma & Energy Resilience Status
+
+**Phase 3: Grand Strategic Architecture**  
+- Eurasian Chessboard Status
+- Rimland vs Heartland Balance
+- Energy Resilience Assessment
+- Key Systemic Interactions & Risks
+
+**Phase 4: Societal Stability & Internal Resilience**  
+Assess for China, Russia, and US/Allied:
+- Demographic trends & human capital
+- Elite cohesion & leadership stability
+- Public trust & polarization
+- Migration & inequality pressures
+- Risk of internal unrest
+- Net impact on external power projection
+
+**Phase 5: Active Theater Trackers**  
+Brief status on major active theaters (Taiwan, Ukraine, Hormuz, South China Sea, etc.)
+
+**Phase 6: Forward Assessment**  
+- Most important assumption that would significantly change the picture if violated
+- 30-day, 90-day, and 180-day outlook
+
+**Final Output Format (MANDATORY)**
+
+Return your response in this exact structure:
 
 ===HUMAN_SUMMARY===
-[Write 2-3 sentences summarizing the current strategic balance]
+Write 2-3 crisp, high-signal sentences summarizing the current strategic balance.
 ===END===
 
 ===STRUCTURED_DATA===
 {
-  "overall_balance": "Short clear judgment (e.g. Slightly tilted toward China)",
+  "overall_balance": "Short clear judgment",
   "china_confidence": 64,
   "us_confidence": 57,
   "russia_confidence": 52,
@@ -360,31 +426,23 @@ Your task is to provide a complete strategic assessment in this exact format:
   "us_state": "Stable",
   "russia_state": "Confident",
   "eu_state": "Stable",
-  "top_linkages": [
-    "First causal linkage",
-    "Second causal linkage", 
-    "Third causal linkage"
-  ],
-  "eurasian_chessboard": "Rich 6-8 sentence narrative about the Eurasian theater",
-  "drone_section": "Rich 7-9 sentence narrative about drone warfare",
-  "agi_race": "Rich 6-8 sentence narrative about the AGI race",
-  "momentum_summary": "1-2 sentence summary of current momentum",
-  "momentum_detail": "2-3 sentence detailed explanation",
-  "thirty_day": "Brief 30-day outlook",
-  "ninety_day": "Brief 90-day outlook",
-  "one_eighty_day": "Brief 180-day outlook"
+  "top_linkages": ["Linkage 1", "Linkage 2", "Linkage 3"],
+  "eurasian_chessboard": "Rich 6-8 sentence narrative",
+  "drone_section": "Rich 7-9 sentence narrative",
+  "agi_race": "Rich 6-8 sentence narrative",
+  "momentum_summary": "1-2 sentence summary",
+  "momentum_detail": "2-3 sentence explanation",
+  "thirty_day": "Brief outlook",
+  "ninety_day": "Brief outlook",
+  "one_eighty_day": "Brief outlook"
 }
 ===END===
 
 ===QR_CODE===
-Generate a QR code for the JSON above. You can provide a link to a QR image or describe how to create it.
+Generate a scannable QR code for the JSON object above. Provide a direct link to a QR image if possible.
 ===END===
 
-Use these strategic frameworks in your analysis: Heartland vs Rimland, Offensive Realism, Sea Power (Mahan), and Power Transition Theory.
-
-Prioritize recent leader statements, observable actions, think tank analysis (CSIS, RAND, ISW), and high-signal X accounts (@sentdefender, @WarintheFuture, @Oryxspioenkop).
-
-Make sure the JSON is valid and complete.`;
+Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
@@ -541,7 +599,7 @@ Make sure the JSON is valid and complete.`;
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.9] Rebuilt with strong prompt loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.9] Final hybrid version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
