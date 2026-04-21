@@ -39,6 +39,12 @@
             </div>
             
             <div class="flex items-center gap-x-2">
+                <!-- NEW: Scan QR Code Button -->
+                <button onclick="startQRScanner()" class="px-4 py-2 text-sm font-medium flex items-center gap-x-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-3xl transition-all active:scale-[0.96]">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>Scan QR Code</span>
+                </button>
+                
                 <button onclick="showManualPaste()" class="px-4 py-2 text-sm font-medium flex items-center gap-x-2 text-slate-300 hover:text-white transition-colors">
                     <i class="fa-solid fa-paste"></i>
                     <span>Manual Paste</span>
@@ -62,6 +68,7 @@
             <div>
                 <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Companion</h1>
                 <p class="text-lg text-slate-400 mt-1">US • China • Russia • EU • Living Intelligence System</p>
+                <p class="text-xs text-emerald-400 mt-1">1. Refresh with Grok → 2. Tap "Scan QR Code" → 3. Point camera at QR code on screen</p>
             </div>
             <div class="text-right hidden md:block">
                 <div class="text-xs text-slate-500">LAST UPDATED</div>
@@ -147,7 +154,7 @@
             </div>
         </div>
 
-        <!-- Other tabs (abbreviated) -->
+        <!-- Other tabs (abbreviated for space) -->
         <div id="dashboard-domains" class="dashboard-content hidden">
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">DOMAIN DEEP DIVES</div>
@@ -599,7 +606,7 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.9] Final hybrid version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.9] Final fixed version with Scan QR Code button loaded.', 'color:#64748b');
         }
         
         window.onload = init;
