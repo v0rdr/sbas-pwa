@@ -575,8 +575,28 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
                 return;
             }
             
-            // AUTO-CONVERT CURLY QUOTES TO STRAIGHT QUOTES
+            // COMPREHENSIVE JSON CLEANER
+            text = text.trim();
+            
+            // Remove markdown code blocks
+            text = text.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
+            
+            // Remove BOM if present
+            if (text.charCodeAt(0) === 0xFEFF) {
+                text = text.slice(1);
+            }
+            
+            // Replace all curly/smart quotes with straight quotes
             text = text.replace(/[""]/g, '"').replace(/['']/g, "'");
+            
+            // Remove zero-width and non-breaking spaces
+            text = text.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '');
+            
+            // Remove trailing commas before } or ]
+            text = text.replace(/,(\s*[}\]])/g, '$1');
+            
+            // Remove any remaining non-printable characters except newlines and tabs
+            text = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
             
             try {
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -586,9 +606,14 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
                     hideManualPaste();
                     return;
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error("JSON Parse Error:", e);
+                alert("Could not parse the JSON. Common issues: missing commas, trailing commas, or unescaped characters. Please check the format.");
+                hideManualPaste();
+                return;
+            }
             
-            alert("Could not parse the content. Please check the JSON format.");
+            alert("Could not find valid JSON in the pasted content.");
             hideManualPaste();
         }
         
@@ -615,7 +640,7 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.9] Final version with auto quote conversion + improved QR prompt loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.9] Final version with comprehensive JSON cleaner loaded.', 'color:#64748b');
         }
         
         window.onload = init;
