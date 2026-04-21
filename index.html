@@ -9,6 +9,7 @@
     <title>SBAS v8.9 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
@@ -39,7 +40,6 @@
             </div>
             
             <div class="flex items-center gap-x-2">
-                <!-- NEW: Scan QR Code Button -->
                 <button onclick="startQRScanner()" class="px-4 py-2 text-sm font-medium flex items-center gap-x-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-3xl transition-all active:scale-[0.96]">
                     <i class="fa-solid fa-qrcode"></i>
                     <span>Scan QR Code</span>
@@ -68,7 +68,7 @@
             <div>
                 <h1 class="font-display text-5xl font-semibold tracking-[-2px]">Strategic Companion</h1>
                 <p class="text-lg text-slate-400 mt-1">US • China • Russia • EU • Living Intelligence System</p>
-                <p class="text-xs text-emerald-400 mt-1">1. Refresh with Grok → 2. Tap "Scan QR Code" → 3. Point camera at QR code on screen</p>
+                <p class="text-xs text-emerald-400 mt-1">1. Refresh with Grok → 2. Tap "Scan QR Code" or "Manual Paste" → 3. Point camera at QR or paste JSON</p>
             </div>
             <div class="text-right hidden md:block">
                 <div class="text-xs text-slate-500">LAST UPDATED</div>
@@ -154,7 +154,7 @@
             </div>
         </div>
 
-        <!-- Other tabs (abbreviated for space) -->
+        <!-- Other tabs (abbreviated) -->
         <div id="dashboard-domains" class="dashboard-content hidden">
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">DOMAIN DEEP DIVES</div>
@@ -283,6 +283,7 @@
         let radarChartInstance = null;
         let momentumChartInstance = null;
         let qrStream = null;
+        let qrScanInterval = null;
         
         function createRadarChart() {
             const ctx = document.getElementById('radarChart');
@@ -427,12 +428,12 @@ Write 2-3 crisp, high-signal sentences summarizing the current strategic balance
   "overall_balance": "Short clear judgment",
   "china_confidence": 64,
   "us_confidence": 57,
-  "russia_confidence": 52,
-  "eu_confidence": 48,
-  "china_state": "Approaching Overconfidence",
-  "us_state": "Stable",
-  "russia_state": "Confident",
-  "eu_state": "Stable",
+  "russia_confidence": 51,
+  "eu_confidence": 47,
+  "china_state": "Cautiously Confident",
+  "us_state": "Pragmatic but Strained",
+  "russia_state": "Resilient but Overextended",
+  "eu_state": "Burdened and Fragmented",
   "top_linkages": ["Linkage 1", "Linkage 2", "Linkage 3"],
   "eurasian_chessboard": "Rich 6-8 sentence narrative",
   "drone_section": "Rich 7-9 sentence narrative",
@@ -446,7 +447,11 @@ Write 2-3 crisp, high-signal sentences summarizing the current strategic balance
 ===END===
 
 ===QR_CODE===
-Generate a scannable QR code for the JSON object above. Provide a direct link to a QR image if possible.
+IMPORTANT: Generate a REAL, WORKING QR code using this exact format:
+https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=BASE64_ENCODED_JSON_HERE
+
+Replace BASE64_ENCODED_JSON_HERE with the base64 encoded version of the JSON above.
+Do NOT use placeholder domains like example.com.
 ===END===
 
 Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
@@ -461,7 +466,7 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
             document.body.removeChild(link);
         }
         
-        // QR Scanner
+        // QR Scanner using jsQR (works on all devices including iOS)
         async function startQRScanner() {
             const modal = document.getElementById('qr-scanner-modal');
             const video = document.getElementById('qr-video');
@@ -474,28 +479,24 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
                 });
                 video.srcObject = qrStream;
                 
-                if ('BarcodeDetector' in window) {
-                    const detector = new BarcodeDetector({ formats: ['qr_code'] });
-                    
-                    const scan = async () => {
-                        try {
-                            const barcodes = await detector.detect(video);
-                            if (barcodes.length > 0) {
-                                const result = barcodes[0].rawValue;
-                                stopQRScanner();
-                                processQRResult(result);
-                            } else {
-                                requestAnimationFrame(scan);
-                            }
-                        } catch (e) {
-                            requestAnimationFrame(scan);
+                qrScanInterval = setInterval(() => {
+                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, canvas.width, canvas.height);
+                        
+                        if (code) {
+                            stopQRScanner();
+                            processQRResult(code.data);
                         }
-                    };
-                    scan();
-                } else {
-                    alert("QR scanning works best on Chrome/Edge. Please use manual paste as fallback.");
-                    stopQRScanner();
-                }
+                    }
+                }, 200);
+                
             } catch (err) {
                 alert("Could not access camera. Please use manual paste instead.");
                 stopQRScanner();
@@ -505,6 +506,11 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
         function stopQRScanner() {
             const modal = document.getElementById('qr-scanner-modal');
             const video = document.getElementById('qr-video');
+            
+            if (qrScanInterval) {
+                clearInterval(qrScanInterval);
+                qrScanInterval = null;
+            }
             
             if (qrStream) {
                 qrStream.getTracks().forEach(track => track.stop());
@@ -563,11 +569,14 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
         }
         
         function parseManualPaste() {
-            const text = document.getElementById('manual-paste-text').value;
+            let text = document.getElementById('manual-paste-text').value;
             if (!text.trim()) {
                 alert("Please paste some content first.");
                 return;
             }
+            
+            // AUTO-CONVERT CURLY QUOTES TO STRAIGHT QUOTES
+            text = text.replace(/[""]/g, '"').replace(/['']/g, "'");
             
             try {
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -579,7 +588,7 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
                 }
             } catch (e) {}
             
-            alert("Could not parse the content. Please try the QR code method.");
+            alert("Could not parse the content. Please check the JSON format.");
             hideManualPaste();
         }
         
@@ -606,7 +615,7 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.9] Final fixed version with Scan QR Code button loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.9] Final version with auto quote conversion + improved QR prompt loaded.', 'color:#64748b');
         }
         
         window.onload = init;
