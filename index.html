@@ -277,6 +277,31 @@
         </div>
     </div>
 
+    <!-- JSON Preview & Fix Modal -->
+    <div id="json-preview-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[150]">
+        <div class="glass rounded-3xl p-8 w-full max-w-3xl mx-4 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+                <div class="font-semibold text-xl">JSON Preview &amp; Fix</div>
+                <button onclick="hideJsonPreview()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times fa-lg"></i></button>
+            </div>
+            
+            <div class="text-sm text-slate-400 mb-2">The app cleaned the JSON, but it still has structural issues. You can edit it below or send it to Grok for automatic fixing.</div>
+            
+            <textarea id="cleaned-json-text" class="flex-1 w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono mb-4" style="min-height: 300px;"></textarea>
+            
+            <div class="flex gap-x-3">
+                <button onclick="sendToGrokForFixing()" class="flex-1 px-5 py-3 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl flex items-center justify-center gap-x-2">
+                    <i class="fa-solid fa-magic"></i>
+                    <span>Send to Grok for Fixing</span>
+                </button>
+                
+                <button onclick="tryParseCleanedJSON()" class="px-5 py-3 bg-slate-700 hover:bg-slate-600 text-sm font-semibold rounded-3xl">
+                    Try Parse Again
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function initTailwind() {}
         
@@ -284,6 +309,7 @@
         let momentumChartInstance = null;
         let qrStream = null;
         let qrScanInterval = null;
+        let lastCleanedJSON = '';
         
         function createRadarChart() {
             const ctx = document.getElementById('radarChart');
@@ -598,6 +624,9 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
             // Remove any remaining non-printable characters except newlines and tabs
             text = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
             
+            // Store cleaned version
+            lastCleanedJSON = text;
+            
             try {
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
@@ -607,14 +636,47 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
                     return;
                 }
             } catch (e) {
-                console.error("JSON Parse Error:", e);
-                alert("Could not parse the JSON. Common issues: missing commas, trailing commas, or unescaped characters. Please check the format.");
-                hideManualPaste();
+                // Show preview modal with cleaned JSON
+                document.getElementById('cleaned-json-text').value = lastCleanedJSON;
+                document.getElementById('manual-paste-modal').classList.add('hidden');
+                document.getElementById('json-preview-modal').classList.remove('hidden');
                 return;
             }
             
             alert("Could not find valid JSON in the pasted content.");
             hideManualPaste();
+        }
+        
+        function hideJsonPreview() {
+            document.getElementById('json-preview-modal').classList.add('hidden');
+        }
+        
+        function sendToGrokForFixing() {
+            const cleanedJSON = document.getElementById('cleaned-json-text').value;
+            const prompt = `Fix this JSON so it is perfectly valid. Return ONLY the corrected JSON, nothing else:\n\n${cleanedJSON}`;
+            
+            const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
+            const link = document.createElement('a');
+            link.href = grokUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            hideJsonPreview();
+        }
+        
+        function tryParseCleanedJSON() {
+            const text = document.getElementById('cleaned-json-text').value;
+            
+            try {
+                const data = JSON.parse(text);
+                applyDataToDashboard(data);
+                hideJsonPreview();
+            } catch (e) {
+                alert("Still has issues. Please send to Grok for fixing.");
+            }
         }
         
         function init() {
@@ -640,7 +702,7 @@ Make sure the JSON is perfectly valid. Use maximum signal density throughout.`;
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.9] Final version with comprehensive JSON cleaner loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.9] Final hybrid version with JSON preview + Grok fixing button loaded.', 'color:#64748b');
         }
         
         window.onload = init;
