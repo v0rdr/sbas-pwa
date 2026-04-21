@@ -147,7 +147,7 @@
             </div>
         </div>
 
-        <!-- Other tabs (simplified for space) -->
+        <!-- Other tabs (abbreviated) -->
         <div id="dashboard-domains" class="dashboard-content hidden">
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">DOMAIN DEEP DIVES</div>
@@ -341,15 +341,50 @@
         }
         
         function refreshWithGrok() {
-            const prompt = `You are SBAS v8.9, an elite strategic awareness engine.
+            const prompt = `You are SBAS v8.9, an elite first-principles strategic awareness engine and living intelligence system.
 
-Please do the following:
+Your task is to provide a complete strategic assessment in this exact format:
 
-1. Provide a short human-readable summary (2-3 sentences)
-2. Provide the data in clean JSON format
-3. Generate a QR code for the JSON data (you can describe it or provide a link to a QR image)
+===HUMAN_SUMMARY===
+[Write 2-3 sentences summarizing the current strategic balance]
+===END===
 
-At the very end, clearly mark the QR code section.`;
+===STRUCTURED_DATA===
+{
+  "overall_balance": "Short clear judgment (e.g. Slightly tilted toward China)",
+  "china_confidence": 64,
+  "us_confidence": 57,
+  "russia_confidence": 52,
+  "eu_confidence": 48,
+  "china_state": "Approaching Overconfidence",
+  "us_state": "Stable",
+  "russia_state": "Confident",
+  "eu_state": "Stable",
+  "top_linkages": [
+    "First causal linkage",
+    "Second causal linkage", 
+    "Third causal linkage"
+  ],
+  "eurasian_chessboard": "Rich 6-8 sentence narrative about the Eurasian theater",
+  "drone_section": "Rich 7-9 sentence narrative about drone warfare",
+  "agi_race": "Rich 6-8 sentence narrative about the AGI race",
+  "momentum_summary": "1-2 sentence summary of current momentum",
+  "momentum_detail": "2-3 sentence detailed explanation",
+  "thirty_day": "Brief 30-day outlook",
+  "ninety_day": "Brief 90-day outlook",
+  "one_eighty_day": "Brief 180-day outlook"
+}
+===END===
+
+===QR_CODE===
+Generate a QR code for the JSON above. You can provide a link to a QR image or describe how to create it.
+===END===
+
+Use these strategic frameworks in your analysis: Heartland vs Rimland, Offensive Realism, Sea Power (Mahan), and Power Transition Theory.
+
+Prioritize recent leader statements, observable actions, think tank analysis (CSIS, RAND, ISW), and high-signal X accounts (@sentdefender, @WarintheFuture, @Oryxspioenkop).
+
+Make sure the JSON is valid and complete.`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
@@ -361,7 +396,7 @@ At the very end, clearly mark the QR code section.`;
             document.body.removeChild(link);
         }
         
-        // QR Scanner Functions
+        // QR Scanner
         async function startQRScanner() {
             const modal = document.getElementById('qr-scanner-modal');
             const video = document.getElementById('qr-video');
@@ -374,7 +409,6 @@ At the very end, clearly mark the QR code section.`;
                 });
                 video.srcObject = qrStream;
                 
-                // Simple QR detection (using BarcodeDetector if available)
                 if ('BarcodeDetector' in window) {
                     const detector = new BarcodeDetector({ formats: ['qr_code'] });
                     
@@ -394,8 +428,7 @@ At the very end, clearly mark the QR code section.`;
                     };
                     scan();
                 } else {
-                    // Fallback message
-                    alert("QR scanning works best on Chrome/Edge. You can still use manual paste as fallback.");
+                    alert("QR scanning works best on Chrome/Edge. Please use manual paste as fallback.");
                     stopQRScanner();
                 }
             } catch (err) {
@@ -419,7 +452,6 @@ At the very end, clearly mark the QR code section.`;
         
         function processQRResult(result) {
             try {
-                // Try to parse as JSON
                 const data = JSON.parse(result);
                 applyDataToDashboard(data);
                 
@@ -429,7 +461,7 @@ At the very end, clearly mark the QR code section.`;
                 document.body.appendChild(toast);
                 setTimeout(() => { toast.style.transition = 'all 0.4s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 2400);
             } catch (e) {
-                alert("Could not read QR code data. Please try manual paste.");
+                alert("Could not read QR code. Please try manual paste.");
             }
         }
         
@@ -446,7 +478,6 @@ At the very end, clearly mark the QR code section.`;
             if (data.china_state) document.getElementById('china-state').innerText = data.china_state;
             if (data.us_state) document.getElementById('us-state').innerText = data.us_state;
             
-            // Update Forward Assessment
             const forwardDiv = document.getElementById('forward-content');
             let forwardHTML = '';
             if (data.thirty_day) forwardHTML += `<div><div class="text-emerald-400 font-medium mb-1">30 DAYS</div><div class="text-sm">${data.thirty_day}</div></div>`;
@@ -474,7 +505,6 @@ At the very end, clearly mark the QR code section.`;
             }
             
             try {
-                // Try to extract JSON
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
                     const data = JSON.parse(jsonMatch[0]);
@@ -484,7 +514,7 @@ At the very end, clearly mark the QR code section.`;
                 }
             } catch (e) {}
             
-            alert("Could not parse the pasted content. Please try the QR code method.");
+            alert("Could not parse the content. Please try the QR code method.");
             hideManualPaste();
         }
         
@@ -493,7 +523,6 @@ At the very end, clearly mark the QR code section.`;
             createRadarChart();
             createMomentumChart();
             
-            // Set initial content
             document.getElementById('forward-content').innerHTML = `
                 <div>
                     <div class="text-emerald-400 font-medium mb-1">30 DAYS</div>
@@ -512,7 +541,7 @@ At the very end, clearly mark the QR code section.`;
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.9] QR Code + In-app Scanner version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.9] Rebuilt with strong prompt loaded.', 'color:#64748b');
         }
         
         window.onload = init;
