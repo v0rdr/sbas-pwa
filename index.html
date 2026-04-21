@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SBAS v8.8">
-    <title>SBAS v8.8 • Strategic Companion</title>
+    <meta name="apple-mobile-web-app-title" content="SBAS v8.9">
+    <title>SBAS v8.9 • Strategic Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,9 +15,6 @@
         body { font-family: 'Inter', system_ui, sans-serif; -webkit-tap-highlight-color: transparent; }
         .font-display { font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif; font-weight: 600; }
         .glass { background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(24px); border: 1px solid rgba(148, 163, 184, 0.1); }
-        .modern-card { transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
-        .modern-card:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
-        .section-header { font-size: 10px; letter-spacing: 2px; font-weight: 700; color: #64748b; }
         .premium-shadow { box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.4), 0 4px 6px -4px rgb(15 23 42 / 0.4); }
         .updated { animation: updated-pulse 1.8s ease-out; }
         @keyframes updated-pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
@@ -37,12 +34,12 @@
                 </div>
                 <div>
                     <span class="font-display text-2xl font-semibold tracking-tight">SBAS</span>
-                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.8</span>
+                    <span class="text-[10px] font-mono text-emerald-400 ml-1">v8.9</span>
                 </div>
             </div>
             
             <div class="flex items-center gap-x-2">
-                <button onclick="showPasteModal()" class="px-4 py-2 text-sm font-medium flex items-center gap-x-2 text-slate-300 hover:text-white transition-colors">
+                <button onclick="showManualPaste()" class="px-4 py-2 text-sm font-medium flex items-center gap-x-2 text-slate-300 hover:text-white transition-colors">
                     <i class="fa-solid fa-paste"></i>
                     <span>Manual Paste</span>
                 </button>
@@ -150,7 +147,7 @@
             </div>
         </div>
 
-        <!-- Other tabs (abbreviated for space - full content same as previous versions) -->
+        <!-- Other tabs (simplified for space) -->
         <div id="dashboard-domains" class="dashboard-content hidden">
             <div class="mb-6">
                 <div class="section-header mb-4 px-1">DOMAIN DEEP DIVES</div>
@@ -222,7 +219,7 @@
                         </div>
                     </div>
                     <div id="conflict-outcome-content" class="text-sm text-slate-300 leading-relaxed">
-                        Select a scenario above to see Grok's assessment.
+                        Select a scenario above.
                     </div>
                 </div>
             </div>
@@ -240,14 +237,33 @@
         </div>
     </div>
 
-    <!-- Paste Modal (for fallback) -->
-    <div id="paste-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[100]">
+    <!-- QR Scanner Modal -->
+    <div id="qr-scanner-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[200]">
+        <div class="w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4 px-4">
+                <div class="text-white text-xl font-semibold">Scan QR Code</div>
+                <button onclick="stopQRScanner()" class="text-white text-2xl">×</button>
+            </div>
+            
+            <div class="relative">
+                <video id="qr-video" class="w-full rounded-2xl" autoplay playsinline></video>
+                <div class="absolute inset-0 border-2 border-emerald-400 rounded-2xl pointer-events-none"></div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-slate-400 text-sm">Point your camera at the QR code from Grok</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Paste Modal -->
+    <div id="manual-paste-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[100]">
         <div class="glass rounded-3xl p-8 w-full max-w-2xl mx-4">
             <div class="flex items-center justify-between mb-4">
                 <div class="font-semibold text-xl">Manual Paste (Fallback)</div>
-                <button onclick="hidePasteModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times fa-lg"></i></button>
+                <button onclick="hideManualPaste()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-times fa-lg"></i></button>
             </div>
-            <textarea id="manual-paste" class="w-full h-64 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono" placeholder="Paste Grok's full response here as fallback..."></textarea>
+            <textarea id="manual-paste-text" class="w-full h-64 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-mono" placeholder="Paste Grok's response here..."></textarea>
             <div class="flex justify-end mt-4">
                 <button onclick="parseManualPaste()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-3xl">Update Dashboard</button>
             </div>
@@ -259,6 +275,7 @@
         
         let radarChartInstance = null;
         let momentumChartInstance = null;
+        let qrStream = null;
         
         function createRadarChart() {
             const ctx = document.getElementById('radarChart');
@@ -323,46 +340,16 @@
             }
         }
         
-        function showPasteModal() {
-            document.getElementById('paste-modal').classList.remove('hidden');
-        }
-        
-        function hidePasteModal() {
-            document.getElementById('paste-modal').classList.add('hidden');
-        }
-        
         function refreshWithGrok() {
-            const prompt = `You are SBAS v8.8, an elite first-principles strategic awareness engine.
+            const prompt = `You are SBAS v8.9, an elite strategic awareness engine.
 
-Return your response in two parts:
+Please do the following:
 
-1. A short human-readable summary (2-3 sentences)
-2. A structured JSON object with all data
+1. Provide a short human-readable summary (2-3 sentences)
+2. Provide the data in clean JSON format
+3. Generate a QR code for the JSON data (you can describe it or provide a link to a QR image)
 
-Then at the very end, provide this exact line:
-
-[Tap to instantly update SBAS] https://sbas-v8-8.netlify.app/update?data=BASE64_JSON_HERE
-
-Replace BASE64_JSON_HERE with the base64 encoded version of this JSON:
-
-{
-  "overall_balance": "Slightly tilted toward China",
-  "china_confidence": 64,
-  "us_confidence": 57,
-  "china_state": "Approaching Overconfidence",
-  "us_state": "Stable",
-  "top_linkages": ["Linkage 1", "Linkage 2", "Linkage 3"],
-  "eurasian_chessboard": "Full narrative here...",
-  "drone_section": "Full narrative here...",
-  "agi_race": "Full narrative here...",
-  "momentum_summary": "Short summary",
-  "momentum_detail": "Detailed explanation",
-  "thirty_day": "Brief outlook",
-  "ninety_day": "Brief outlook",
-  "one_eighty_day": "Brief outlook"
-}
-
-Make sure the JSON is valid and the base64 is clean.`;
+At the very end, clearly mark the QR code section.`;
 
             const grokUrl = `https://grok.com/?q=${encodeURIComponent(prompt)}`;
             const link = document.createElement('a');
@@ -374,34 +361,79 @@ Make sure the JSON is valid and the base64 is clean.`;
             document.body.removeChild(link);
         }
         
-        // Auto-detect Smart Link when page loads
-        function checkForSmartLink() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const data = urlParams.get('data');
+        // QR Scanner Functions
+        async function startQRScanner() {
+            const modal = document.getElementById('qr-scanner-modal');
+            const video = document.getElementById('qr-video');
             
-            if (data) {
-                try {
-                    const jsonString = atob(data);
-                    const parsedData = JSON.parse(jsonString);
-                    applyDataToApp(parsedData);
+            modal.classList.remove('hidden');
+            
+            try {
+                qrStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment" } 
+                });
+                video.srcObject = qrStream;
+                
+                // Simple QR detection (using BarcodeDetector if available)
+                if ('BarcodeDetector' in window) {
+                    const detector = new BarcodeDetector({ formats: ['qr_code'] });
                     
-                    // Clean URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                    // Show success message
-                    const toast = document.createElement('div');
-                    toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
-                    toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Dashboard updated via Smart Link</span>`;
-                    document.body.appendChild(toast);
-                    setTimeout(() => { toast.style.transition = 'all 0.4s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 2400);
-                } catch (e) {
-                    console.error("Failed to parse Smart Link data:", e);
+                    const scan = async () => {
+                        try {
+                            const barcodes = await detector.detect(video);
+                            if (barcodes.length > 0) {
+                                const result = barcodes[0].rawValue;
+                                stopQRScanner();
+                                processQRResult(result);
+                            } else {
+                                requestAnimationFrame(scan);
+                            }
+                        } catch (e) {
+                            requestAnimationFrame(scan);
+                        }
+                    };
+                    scan();
+                } else {
+                    // Fallback message
+                    alert("QR scanning works best on Chrome/Edge. You can still use manual paste as fallback.");
+                    stopQRScanner();
                 }
+            } catch (err) {
+                alert("Could not access camera. Please use manual paste instead.");
+                stopQRScanner();
             }
         }
         
-        function applyDataToApp(data) {
-            // Update Strategic Balance
+        function stopQRScanner() {
+            const modal = document.getElementById('qr-scanner-modal');
+            const video = document.getElementById('qr-video');
+            
+            if (qrStream) {
+                qrStream.getTracks().forEach(track => track.stop());
+                qrStream = null;
+            }
+            
+            modal.classList.add('hidden');
+            video.srcObject = null;
+        }
+        
+        function processQRResult(result) {
+            try {
+                // Try to parse as JSON
+                const data = JSON.parse(result);
+                applyDataToDashboard(data);
+                
+                const toast = document.createElement('div');
+                toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 px-8 py-3.5 bg-emerald-900/90 text-emerald-400 text-sm rounded-3xl flex items-center gap-x-3 shadow-2xl z-[100]';
+                toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>Dashboard updated via QR Code</span>`;
+                document.body.appendChild(toast);
+                setTimeout(() => { toast.style.transition = 'all 0.4s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 2400);
+            } catch (e) {
+                alert("Could not read QR code data. Please try manual paste.");
+            }
+        }
+        
+        function applyDataToDashboard(data) {
             if (data.overall_balance) document.getElementById('overall-balance').innerText = data.overall_balance;
             if (data.china_confidence) {
                 document.getElementById('china-score').innerText = data.china_confidence;
@@ -422,42 +454,44 @@ Make sure the JSON is valid and the base64 is clean.`;
             if (data.one_eighty_day) forwardHTML += `<div><div class="text-emerald-400 font-medium mb-1">180 DAYS</div><div class="text-sm">${data.one_eighty_day}</div></div>`;
             if (forwardHTML) forwardDiv.innerHTML = forwardHTML;
             
-            // Update timestamp
             const now = new Date();
             document.getElementById('last-sync').innerHTML = now.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
         }
         
+        function showManualPaste() {
+            document.getElementById('manual-paste-modal').classList.remove('hidden');
+        }
+        
+        function hideManualPaste() {
+            document.getElementById('manual-paste-modal').classList.add('hidden');
+        }
+        
         function parseManualPaste() {
-            const text = document.getElementById('manual-paste').value;
+            const text = document.getElementById('manual-paste-text').value;
             if (!text.trim()) {
                 alert("Please paste some content first.");
                 return;
             }
             
-            // Simple fallback parser for manual paste
             try {
-                // Try to extract JSON if present
+                // Try to extract JSON
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
-                    const parsed = JSON.parse(jsonMatch[0]);
-                    applyDataToApp(parsed);
-                    hidePasteModal();
+                    const data = JSON.parse(jsonMatch[0]);
+                    applyDataToDashboard(data);
+                    hideManualPaste();
                     return;
                 }
             } catch (e) {}
             
-            // Fallback to basic text extraction
-            alert("Manual paste processed (basic mode). For best results, use the Smart Link.");
-            hidePasteModal();
+            alert("Could not parse the pasted content. Please try the QR code method.");
+            hideManualPaste();
         }
         
         function init() {
             initTailwind();
             createRadarChart();
             createMomentumChart();
-            
-            // Check for Smart Link data on page load
-            checkForSmartLink();
             
             // Set initial content
             document.getElementById('forward-content').innerHTML = `
@@ -478,7 +512,7 @@ Make sure the JSON is valid and the base64 is clean.`;
             document.getElementById('dashboard-overview').classList.remove('hidden');
             document.querySelector('[data-tab="overview"]').classList.add('active');
             
-            console.log('%c[SBAS v8.8] Smart Link + QR backup version loaded.', 'color:#64748b');
+            console.log('%c[SBAS v8.9] QR Code + In-app Scanner version loaded.', 'color:#64748b');
         }
         
         window.onload = init;
